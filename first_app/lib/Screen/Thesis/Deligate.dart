@@ -1,6 +1,9 @@
 
+import 'package:first_app/Screen/Thesis/leave.dart';
+import 'package:first_app/model/emp_leave.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../main.dart';
 
@@ -12,8 +15,8 @@ class deligate extends StatefulWidget {
 }
 
 class _deligateState extends State<deligate> {
-  String startdate = DateTime.now().toString();
-  String enddate = DateTime.now().toString();
+  String startdate = DateFormat('dd-MM-yyyy').format(DateTime.now());
+  String enddate = DateFormat('dd-MM-yyyy').format(DateTime.now());
   List leavelist = ['ลากิจ', 'ลาพักผ่อน', 'ลาคลอด'];
   String leavetype = 'ลากิจ';
   Future<void> _openDatepicker(BuildContext context) async {
@@ -25,19 +28,32 @@ class _deligateState extends State<deligate> {
 
     if (d != null) {
       setState(() {
-        startdate = d.toLocal().toString();
+        startdate = DateFormat('dd-MM-yyyy').format(d);
       });
     }
 
+  }
+
+  Future<void> _openDatepickerend(BuildContext context) async {
+    final DateTime? d = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: new DateTime(2017),
+        lastDate: new DateTime(2030));
+
+   
+
     if (d != null) {
       setState(() {
-        enddate = d.toLocal().toString();
+        enddate = DateFormat('dd-MM-yyyy').format(d);
       });
     }
   }
 
   int currentIndex = 0;
   final screens = [deligate(), leave()];
+  // final formKey = GlobalKey<FormState>();
+  // emp_leave myleave = emp_leave();
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +61,7 @@ class _deligateState extends State<deligate> {
     return Scaffold(
       
       body:  SingleChildScrollView(
+      
       child : Stack(
         children: <Widget>[
           Container(
@@ -81,9 +98,12 @@ class _deligateState extends State<deligate> {
               decoration: BoxDecoration(color: Colors.white,
               borderRadius: BorderRadius.circular(29.5),),
               
-               child: TextField(decoration: InputDecoration(hintText: "Search",
+               child: TextFormField(decoration: InputDecoration(hintText: "Search",
                
                border: InputBorder.none),
+              //  onSaved: (String empid){
+
+              //  },
                )
               
             ),
@@ -144,7 +164,7 @@ class _deligateState extends State<deligate> {
                       Column(
                         children: <Widget>[
                           Row(children: <Widget>[
-                            Text(enddate),
+                            Text(startdate),
                             IconButton(
                               icon: Icon(Icons.calendar_today),
                               onPressed: () {
@@ -178,7 +198,8 @@ class _deligateState extends State<deligate> {
                             IconButton(
                               icon: Icon(Icons.calendar_today),
                               onPressed: () {
-                                _openDatepicker(context);
+                                _openDatepickerend(context);
+                                
                               },
                             ),
                           ])

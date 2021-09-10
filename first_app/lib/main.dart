@@ -1,4 +1,6 @@
 
+import 'package:first_app/Screen/Thesis/clock.dart';
+import 'package:first_app/Screen/Thesis/leave.dart';
 import 'package:flutter/material.dart';
 
 import 'Screen/Thesis/Deligate.dart';
@@ -76,8 +78,3 @@ body: screens[currentIndex],
   );
 }
 
-clock() {
-}
-
-leave() {
-}

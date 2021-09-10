@@ -1,7 +1,9 @@
 import 'package:first_app/Screen/Thesis/approve.dart';
+import 'package:first_app/model/emp_leave.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 
 class leave extends StatefulWidget {
   const leave({Key? key}) : super(key: key);
@@ -12,17 +14,52 @@ class leave extends StatefulWidget {
 
 class _leaveState extends State<leave> {
   List leavelist = ['ลากิจ', 'ลาพักผ่อน', 'ลาคลอด'];
-  String leavetype = 'ลากิจ';
-  Future<void> _openDatepicker(BuildContext context) async {
+  String leavetype = 'ลากิจ'; String leaveid = "";
+  
+  String startdate = DateFormat('dd-MM-yyyy').format(DateTime.now());
+  String enddate = DateFormat('dd-MM-yyyy').format(DateTime.now());
+
+Future<void> _openDatepickerstart(BuildContext context) async {
     final DateTime? d = await showDatePicker(
         context: context,
         initialDate: DateTime.now(),
         firstDate: new DateTime(2017),
         lastDate: new DateTime(2030));
+
+    if (d != null) {
+      setState(() {
+        startdate = DateFormat('dd-MM-yyyy').format(d);
+      });
+    }
   }
 
-  String startdate = DateTime.now().toString();
-  String enddate = DateTime.now().toString();
+  Future<void> _openDatepickerend(BuildContext context) async {
+    final DateTime? d = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: new DateTime(2017),
+        lastDate: new DateTime(2030));
+
+    if (d != null) {
+      setState(() {
+        enddate = DateFormat('dd-MM-yyyy').format(d);
+      });
+    }
+  }
+
+  
+void getDropDownItem(){
+ 
+    setState(() {
+      leaveid = leavetype;
+     myleave.leaveid = leaveid;
+     
+    });
+  }
+  
+
+   final formKey = GlobalKey<FormState>();
+  emp_leave myleave = emp_leave();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,6 +68,8 @@ class _leaveState extends State<leave> {
           leading: Icon(Icons.menu),
         ),
         body: Card(
+          child:Form(
+            key: formKey,
             child:  SingleChildScrollView(
               child: Column(
                       children: [
@@ -52,11 +91,7 @@ class _leaveState extends State<leave> {
                           children: <Widget>[
                             DropdownButton<String>(
                               value: leavetype,
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  leavetype = newValue!;
-                                });
-                              },
+                             
                               items: <String>['ลากิจ', 'ลาพักผ่อน', 'ลาคลอด']
                                   .map<DropdownMenuItem<String>>((String value) {
                                 return DropdownMenuItem<String>(
@@ -64,6 +99,13 @@ class _leaveState extends State<leave> {
                                   child: Text(value),
                                 );
                               }).toList(),
+                               onChanged: (String? newValue) {
+                                setState(() {
+                                  leavetype = newValue!;
+                                  
+                                    // myleave.leaveid = leavetype;
+                                });
+                              },
                             ),
                           ],
                         ),
@@ -88,11 +130,19 @@ class _leaveState extends State<leave> {
                       Column(
                         children: <Widget>[
                           Row(children: <Widget>[
-                            Text(enddate),
+                            Text(startdate),
                             IconButton(
                               icon: Icon(Icons.calendar_today),
                               onPressed: () {
-                                _openDatepicker(context);
+                                _openDatepickerstart(context).then((date){
+
+                                  setState(() {
+                                    myleave.startdate = DateTime.parse(startdate);
+                                  });
+
+
+                                });
+                               
                               },
                             ),
                           ])
@@ -119,10 +169,14 @@ class _leaveState extends State<leave> {
                         children: <Widget>[
                           Row(children: <Widget>[
                             Text(enddate),
+                            // TextFormField(
+                            //     onSaved: (String? endate){
+                            //       myleave.enddate = DateTime.parse(enddate);
+                            //     }),
                             IconButton(
                               icon: Icon(Icons.calendar_today),
                               onPressed: () {
-                                _openDatepicker(context);
+                                _openDatepickerend(context);
                               },
                             ),
                           ])
@@ -150,7 +204,11 @@ class _leaveState extends State<leave> {
                             SizedBox(
                               height: 50,
                               width: 250,
-                              child: TextField(),
+                              child: TextFormField(
+                                onSaved: (String? comment){
+                                  myleave.comment = comment;
+                                },
+                              ),
                             )
                           ])
                         ],
@@ -162,16 +220,22 @@ class _leaveState extends State<leave> {
                 height: 50,
                 child: ElevatedButton(
                   child: Text("Send"),
-                  onPressed: () {
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) {
-                      return approve();
-                    }));
+                  onPressed: () {getDropDownItem();
+                    formKey.currentState!.save(); // เรียกใช้งาน onsave ของทุกฟิล
+                    
+                    print("${myleave.comment}");
+                    print("${myleave.leaveid}");
+                     print("${myleave.enddate}");
+                    // Navigator.pushReplacement(context,
+                    //     MaterialPageRoute(builder: (context) {
+                    //   return approve();
+                    // })
+                    // );
                   },
                 ),
               ),
                       ],
                     ),
-            )));
+            ))));
   }
 }
