@@ -1,9 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:first_app/Screen/Thesis/approve.dart';
 import 'package:first_app/model/emp_leave.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class leave extends StatefulWidget {
   const leave({Key? key}) : super(key: key);
@@ -14,12 +17,13 @@ class leave extends StatefulWidget {
 
 class _leaveState extends State<leave> {
   List leavelist = ['ลากิจ', 'ลาพักผ่อน', 'ลาคลอด'];
-  String leavetype = 'ลากิจ'; String leaveid = "";
-  
+  String leavetype = 'ลากิจ';
+  String leaveid = "";
+
   String startdate = DateFormat('dd-MM-yyyy').format(DateTime.now());
   String enddate = DateFormat('dd-MM-yyyy').format(DateTime.now());
 
-Future<void> _openDatepickerstart(BuildContext context) async {
+  Future<void> _openDatepickerstart(BuildContext context) async {
     final DateTime? d = await showDatePicker(
         context: context,
         initialDate: DateTime.now(),
@@ -29,6 +33,7 @@ Future<void> _openDatepickerstart(BuildContext context) async {
     if (d != null) {
       setState(() {
         startdate = DateFormat('dd-MM-yyyy').format(d);
+        myleave.startdate = d;
       });
     }
   }
@@ -43,199 +48,248 @@ Future<void> _openDatepickerstart(BuildContext context) async {
     if (d != null) {
       setState(() {
         enddate = DateFormat('dd-MM-yyyy').format(d);
+        myleave.enddate = d;
       });
     }
   }
 
-  
-void getDropDownItem(){
- 
+  void getDropDownItem() {
     setState(() {
       leaveid = leavetype;
-     myleave.leaveid = leaveid;
-     
+      myleave.leaveid = leaveid;
     });
   }
-  
 
-   final formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
   emp_leave myleave = emp_leave();
+  final leaveidController = TextEditingController();
+  final startdateController = TextEditingController();
+
+  final Future<FirebaseApp> firebase = Firebase.initializeApp(); // เตรียม Firebase
+  final CollectionReference leaveCollection = FirebaseFirestore.instance.collection("leave");
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text("สร้างคำขอลาหยุด"),
-          leading: Icon(Icons.menu),
-        ),
-        body: Card(
-          child:Form(
-            key: formKey,
-            child:  SingleChildScrollView(
-              child: Column(
-                      children: [
-              Container(
-                // decoration: BoxDecoration(
-                //     color: Colors.yellow[600],
-                //     borderRadius: BorderRadius.circular(20)),
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 12.0, bottom: 12.0),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        Column(
-                          children: <Widget>[
-                            Text("ประเภทลา", style: TextStyle(fontSize: 20)),
-                          ],
-                        ),
-                        Column(
-                          children: <Widget>[
-                            DropdownButton<String>(
-                              value: leavetype,
-                             
-                              items: <String>['ลากิจ', 'ลาพักผ่อน', 'ลาคลอด']
-                                  .map<DropdownMenuItem<String>>((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              }).toList(),
-                               onChanged: (String? newValue) {
-                                setState(() {
-                                  leavetype = newValue!;
-                                  
-                                    // myleave.leaveid = leavetype;
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                      ]),
-                ),
+    return FutureBuilder(
+        future: firebase,
+        builder: (context,snapshot){
+          if (snapshot.hasError) {
+            return Scaffold(
+              appBar: AppBar(title: Text("Error"),),
+              body: Center(
+                child: Text("${snapshot.error}"),
               ),
-              Container(
-                  // color: Colors.cyan,
-                  child: Padding(
-                padding: const EdgeInsets.only(top: 12.0, bottom: 12.0),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Column(
-                        children: <Widget>[
-                          Text(
-                            "วันที่เริ่มต้น",
-                            style: TextStyle(fontSize: 20),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: <Widget>[
-                          Row(children: <Widget>[
-                            Text(startdate),
-                            IconButton(
-                              icon: Icon(Icons.calendar_today),
-                              onPressed: () {
-                                _openDatepickerstart(context).then((date){
+            );
+          }
+        
+          if (snapshot.connectionState == ConnectionState.done) {
+            return Consumer<emp_leave>(
+              builder: (context, emp_leave, child) => 
+              Scaffold(
+                  appBar: AppBar(
+                    title: Text("สร้างคำขอลาหยุด"),
+                    centerTitle: true,
+                   // leading: Icon(Icons.menu),
+                  ),
+                  body: Card(
+                      child: Form(
+                          key: formKey,
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                Container(
+                                  // decoration: BoxDecoration(
+                                  //     color: Colors.yellow[600],
+                                  //     borderRadius: BorderRadius.circular(20)),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 12.0, bottom: 12.0),
+                                    child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: <Widget>[
+                                          Column(
+                                            children: <Widget>[
+                                              Text("ประเภทลา",
+                                                  style:
+                                                      TextStyle(fontSize: 20)),
+                                            ],
+                                          ),
+                                          Column(
+                                            children: <Widget>[
+                                              DropdownButton<String>(
+                                                value: leavetype,
+                                                items: <String>[
+                                                  'ลากิจ',
+                                                  'ลาพักผ่อน',
+                                                  'ลาคลอด'
+                                                ].map<DropdownMenuItem<String>>(
+                                                    (String value) {
+                                                  return DropdownMenuItem<
+                                                      String>(
+                                                    value: value,
+                                                    child: Text(value),
+                                                  );
+                                                }).toList(),
+                                                onChanged: (String? newValue) {
+                                                  setState(() {
+                                                    leavetype = newValue!;
 
-                                  setState(() {
-                                    myleave.startdate = DateTime.parse(startdate);
-                                  });
+                                                    // myleave.leaveid = leavetype;
+                                                  });
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ]),
+                                  ),
+                                ),
+                                Container(
+                                    // color: Colors.cyan,
+                                    child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 12.0, bottom: 12.0),
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: <Widget>[
+                                        Column(
+                                          children: <Widget>[
+                                            Text(
+                                              "วันที่เริ่มต้น",
+                                              style: TextStyle(fontSize: 20),
+                                            ),
+                                          ],
+                                        ),
+                                        Column(
+                                          children: <Widget>[
+                                            Row(children: <Widget>[
+                                              Text(startdate),
+                                              IconButton(
+                                                icon:
+                                                    Icon(Icons.calendar_today),
+                                                onPressed: () {
+                                                  _openDatepickerstart(context);
+                                                  // print(context);
+                                                  // then((date){
 
+                                                  //   setState(() {
+                                                  //     myleave.startdate = DateTime.parse(date);
+                                                  //   });
 
-                                });
-                               
-                              },
+                                                  // }
+                                                  // );
+                                                },
+                                              ),
+                                            ])
+                                          ],
+                                        ),
+                                      ]),
+                                )),
+                                Container(
+                                    // color: Colors.cyan,
+                                    child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 12.0, bottom: 12.0),
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: <Widget>[
+                                        Column(
+                                          children: <Widget>[
+                                            Text(
+                                              "วันที่สิ้นสุด",
+                                              style: TextStyle(fontSize: 20),
+                                            ),
+                                          ],
+                                        ),
+                                        Column(
+                                          children: <Widget>[
+                                            Row(children: <Widget>[
+                                              Text(enddate),
+                                              IconButton(
+                                                icon:
+                                                    Icon(Icons.calendar_today),
+                                                onPressed: () {
+                                                  _openDatepickerend(context);
+                                                },
+                                              ),
+                                            ])
+                                          ],
+                                        ),
+                                      ]),
+                                )),
+                                Container(
+                                    child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 12.0, bottom: 12.0),
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: <Widget>[
+                                        Column(
+                                          children: <Widget>[
+                                            Text(
+                                              "หมายเหตุ",
+                                              style: TextStyle(fontSize: 20),
+                                            ),
+                                          ],
+                                        ),
+                                        Column(
+                                          children: <Widget>[
+                                            Row(children: <Widget>[
+                                              SizedBox(
+                                                height: 50,
+                                                width: 250,
+                                                child: TextFormField(
+                                                  onSaved: (String? comment) {
+                                                    myleave.comment = comment;
+                                                  },
+                                                ),
+                                              )
+                                            ])
+                                          ],
+                                        ),
+                                      ]),
+                                )),
+                                SizedBox(
+                                  width: double.infinity,
+                                  height: 50,
+                                  child: ElevatedButton(
+                                    child: Text("Send"),
+                                    onPressed: ()  async{
+                                    //  async
+                                    {
+                                      getDropDownItem();
+                                     
+                                    formKey.currentState!.save(); // เรียกใช้งาน onsave ของทุกตัว
+                                       await leaveCollection.add({
+                                         "leavetype":"dd",
+                                        
+                                        "startdate":myleave.startdate,
+                                        "enddate":myleave.enddate,
+                                        "comment":myleave.comment,
+                                       });}
+                                     //formKey.currentState!.reset();
+                                     
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        return approve();
+                                      })
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
                             ),
-                          ])
-                        ],
-                      ),
-                    ]),
-              )),
-              Container(
-                  // color: Colors.cyan,
-                  child: Padding(
-                padding: const EdgeInsets.only(top: 12.0, bottom: 12.0),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Column(
-                        children: <Widget>[
-                          Text(
-                            "วันที่สิ้นสุด",
-                            style: TextStyle(fontSize: 20),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: <Widget>[
-                          Row(children: <Widget>[
-                            Text(enddate),
-                            // TextFormField(
-                            //     onSaved: (String? endate){
-                            //       myleave.enddate = DateTime.parse(enddate);
-                            //     }),
-                            IconButton(
-                              icon: Icon(Icons.calendar_today),
-                              onPressed: () {
-                                _openDatepickerend(context);
-                              },
-                            ),
-                          ])
-                        ],
-                      ),
-                    ]),
-              )),
-              Container(
-                  child: Padding(
-                padding: const EdgeInsets.only(top: 12.0, bottom: 12.0),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Column(
-                        children: <Widget>[
-                          Text(
-                            "หมายเหตุ",
-                            style: TextStyle(fontSize: 20),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: <Widget>[
-                          Row(children: <Widget>[
-                            SizedBox(
-                              height: 50,
-                              width: 250,
-                              child: TextFormField(
-                                onSaved: (String? comment){
-                                  myleave.comment = comment;
-                                },
-                              ),
-                            )
-                          ])
-                        ],
-                      ),
-                    ]),
-              )),
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  child: Text("Send"),
-                  onPressed: () {getDropDownItem();
-                    formKey.currentState!.save(); // เรียกใช้งาน onsave ของทุกฟิล
-                    
-                    print("${myleave.comment}");
-                    print("${myleave.leaveid}");
-                     print("${myleave.enddate}");
-                    // Navigator.pushReplacement(context,
-                    //     MaterialPageRoute(builder: (context) {
-                    //   return approve();
-                    // })
-                    // );
-                  },
-                ),
-              ),
-                      ],
-                    ),
-            ))));
+                          )))),
+            );
+          }
+          return Scaffold(
+            body: Center(child: CircularProgressIndicator(),),
+          );
+
+        }
+        );
   }
 }

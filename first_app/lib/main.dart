@@ -1,29 +1,49 @@
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:first_app/Screen/Thesis/clock.dart';
 import 'package:first_app/Screen/Thesis/leave.dart';
+import 'package:first_app/Screen/register.dart';
+import 'package:first_app/model/emp_leave.dart';
+import 'package:first_app/model/my_theme_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'Screen/Thesis/Deligate.dart';
 import 'Screen/Thesis/approve.dart';
 import 'Screen/Thesis/profile_screen.dart';
+import 'Screen/login.dart';
 
 
-void main() {
-  runApp(MyApp());
+// void main() {
+//   runApp(MyApp());
+// }
+Future <void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp( MyApp());
 }
 class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-    title: "My App",
-     theme: ThemeData
-     (
-       primarySwatch: Colors.amber,),
-  
-     
-      home:MainPage()
-      );
+    return MultiProvider( 
+      providers: [
+      ChangeNotifierProvider<emp_leave>(
+        create: (_) => emp_leave()),
+        ChangeNotifierProvider(
+        create: (context) => MyThemeModel(),),
+        ],
+    
+      
+      child: MaterialApp(
+      title: "My App",
+       theme: ThemeData
+       (
+         primarySwatch: Colors.amber,),
+      
+        home:MainPage()
+        ),
+    );
    
   }
   }
@@ -66,7 +86,7 @@ body: screens[currentIndex],
        BottomNavigationBarItem(icon: Icon(Icons.account_box),
         label:'Profile',
         backgroundColor: Colors.blue,
-      ),
+      )
       ],
      
       
@@ -77,4 +97,5 @@ body: screens[currentIndex],
   
   );
 }
+
 

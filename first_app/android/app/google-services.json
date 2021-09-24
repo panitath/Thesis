@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "942278861856",
-    "project_id": "myloginapplication-a82d8",
-    "storage_bucket": "myloginapplication-a82d8.appspot.com"
+    "project_number": "704148005839",
+    "project_id": "thesisprojects-47a9d",
+    "storage_bucket": "thesisprojects-47a9d.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:942278861856:android:5d248eea589118a6c4c845",
+        "mobilesdk_app_id": "1:704148005839:android:5952c0511e767139ea68ba",
         "android_client_info": {
           "package_name": "com.example.first_app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "942278861856-aeb3ibei33kku6tqpevsekcfmjp1f3ls.apps.googleusercontent.com",
+          "client_id": "704148005839-0815595klksfumbmobs50cj9co6aq9nd.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDoR9-ukQ_sqtkBRkPTt5v72tAMGmR-hMI"
+          "current_key": "AIzaSyDTZJU6ApOROLjrJfzDnwr5xTUi1d7-7X8"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "942278861856-aeb3ibei33kku6tqpevsekcfmjp1f3ls.apps.googleusercontent.com",
+              "client_id": "704148005839-0815595klksfumbmobs50cj9co6aq9nd.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

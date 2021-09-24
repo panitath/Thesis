@@ -52,7 +52,7 @@ class _profileState extends State<profile> {
           icon: "assets/images/deligate.svg",
           text: "Deligate",
           press: () {
-                    Navigator.pushReplacement(context,
+                    Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
                       return deligate();
                     }));
@@ -63,7 +63,7 @@ class _profileState extends State<profile> {
           icon: "assets/images/calendar.svg",
           text: "Leave",
           press: () {
-                    Navigator.pushReplacement(context,
+                    Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
                       return leave();
                     }));
@@ -73,7 +73,7 @@ class _profileState extends State<profile> {
           icon: "assets/images/leavelist.svg",
           text: "Leavelist",
           press: () {
-                    Navigator.pushReplacement(context,
+                    Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
                       return leave();
                     }));
@@ -84,7 +84,7 @@ class _profileState extends State<profile> {
           icon: "assets/images/Report.svg",
           text: "Report",
           press: () {
-                    Navigator.pushReplacement(context,
+                    Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
                       return leave();
                     }));

@@ -2,6 +2,7 @@
 import 'package:first_app/Screen/Thesis/profile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'leave.dart';
 
@@ -13,8 +14,8 @@ class approve extends StatefulWidget {
 }
 
 class _approveState extends State<approve> {
-  String startdate = DateTime.now().toString();
-  String enddate = DateTime.now().toString();
+  String startdate = DateFormat('dd-MM-yyyy').format(DateTime.now());
+  String enddate =DateFormat('dd-MM-yyyy').format(DateTime.now());
   List leavelist = ['ลากิจ', 'ลาพักผ่อน', 'ลาคลอด'];
   String leavetype = 'ลากิจ';
   Future<void> _openDatepicker(BuildContext context) async {
@@ -26,13 +27,13 @@ class _approveState extends State<approve> {
 
     if (d != null) {
       setState(() {
-        startdate = d.toLocal().toString();
+        startdate = DateFormat('dd-MM-yyyy').format(d);
       });
     }
 
     if (d != null) {
       setState(() {
-        enddate = d.toLocal().toString();
+        enddate = DateFormat('dd-MM-yyyy').format(d);
       });
     }
   }
@@ -41,7 +42,7 @@ class _approveState extends State<approve> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          leading: Icon(Icons.menu),
+          //leading: Icon(Icons.menu),
           title: Text("อนุมัติการลา"),
         ),
         body: SingleChildScrollView(
@@ -169,12 +170,12 @@ class _approveState extends State<approve> {
                         children: <Widget>[
                           Row(children: <Widget>[
                             Text(enddate),
-                            IconButton(
-                              icon: Icon(Icons.calendar_today),
-                              onPressed: () {
-                                _openDatepicker(context);
-                              },
-                            ),
+                            // IconButton(
+                            //   icon: Icon(Icons.calendar_today),
+                            //   onPressed: () {
+                            //     _openDatepicker(context);
+                            //   },
+                            // ),
                           ])
                         ],
                       ),
@@ -199,12 +200,12 @@ class _approveState extends State<approve> {
                         children: <Widget>[
                           Row(children: <Widget>[
                             Text(enddate),
-                            IconButton(
-                              icon: Icon(Icons.calendar_today),
-                              onPressed: () {
-                                _openDatepicker(context);
-                              },
-                            ),
+                            // IconButton(
+                            //   icon: Icon(Icons.calendar_today),
+                            //   onPressed: () {
+                            //     _openDatepicker(context);
+                            //   },
+                            // ),
                           ])
                         ],
                       ),
@@ -263,27 +264,56 @@ class _approveState extends State<approve> {
                         ],
                       ),
                     ]),
+              )),Container(
+                  child: Padding(
+                padding: const EdgeInsets.only(top: 12.0, bottom: 12.0),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Column(
+                        children: <Widget>[
+                          Text(
+                            "หมายเหตุใหม่",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: <Widget>[
+                          Row(children: <Widget>[
+                            SizedBox(
+                              height: 50,
+                              width: 250,
+                              child: TextField(),
+                            )
+                          ])
+                        ],
+                      ),
+                    ]),
               )),
               SizedBox(
                 width: double.infinity,
-                //height: 40,
+                height: 50,
                 child: ElevatedButton(
                   child: Text("อนุมัติ"),
                   onPressed: () {
-                    Navigator.pushReplacement(context,
+                    Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
                       return profile();
                     }));
                   },
                 ),
               ),
+               SizedBox(
+                width: 150,
+                 height: 10),
               SizedBox(
                 width: double.infinity,
-                // height: 40,
+                 height: 50,
                 child: ElevatedButton(
                   child: Text("ปฏิเสธ"),
                   onPressed: () {
-                    Navigator.pushReplacement(context,
+                    Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
                       return profile();
                     }));
