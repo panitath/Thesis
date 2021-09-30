@@ -12,26 +12,59 @@ import 'Screen/Thesis/Deligate.dart';
 import 'Screen/Thesis/approve.dart';
 import 'Screen/Thesis/profile_screen.dart';
 import 'Screen/login.dart';
+import 'model/emp_leavelist.dart';
 
 
 // void main() {
 //   runApp(MyApp());
 // }
-Future <void> main() async {
+// Future <void> main() async {
+//   WidgetsFlutterBinding.ensureInitialized();
+//   await Firebase.initializeApp();
+//   runApp( MyApp());
+// }
+
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp( MyApp());
+  runApp(App());
 }
+
+class App extends StatelessWidget {
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+        future: _initialization,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            print('App error please contact admin');
+          }
+
+          if (snapshot.connectionState == ConnectionState.done) {
+            return MyApp();
+          }
+
+          return Center(child: CircularProgressIndicator());
+        });
+  }
+}
+
 class MyApp extends StatelessWidget {
+  final Future<FirebaseApp> firebase =
+      Firebase.initializeApp();
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider( 
       providers: [
-      ChangeNotifierProvider<emp_leave>(
-        create: (_) => emp_leave()),
+      ChangeNotifierProvider(
+        create: (context) => Empleave()),
         ChangeNotifierProvider(
-        create: (context) => MyThemeModel(),),
+        create: (context) => MyThemeModel()),
+        
+        ChangeNotifierProvider(
+        create: (context) => Emp_leavelist(),),
         ],
     
       

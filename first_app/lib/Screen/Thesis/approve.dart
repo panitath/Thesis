@@ -264,32 +264,6 @@ class _approveState extends State<approve> {
                         ],
                       ),
                     ]),
-              )),Container(
-                  child: Padding(
-                padding: const EdgeInsets.only(top: 12.0, bottom: 12.0),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Column(
-                        children: <Widget>[
-                          Text(
-                            "หมายเหตุใหม่",
-                            style: TextStyle(fontSize: 20),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: <Widget>[
-                          Row(children: <Widget>[
-                            SizedBox(
-                              height: 50,
-                              width: 250,
-                              child: TextField(),
-                            )
-                          ])
-                        ],
-                      ),
-                    ]),
               )),
               SizedBox(
                 width: double.infinity,

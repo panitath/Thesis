@@ -1,4 +1,5 @@
 
+import 'package:first_app/Screen/Thesis/leavelist.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -75,7 +76,7 @@ class _profileState extends State<profile> {
           press: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return leave();
+                      return leave_list();
                     }));
                   },
         ),

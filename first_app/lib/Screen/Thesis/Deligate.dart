@@ -1,5 +1,6 @@
 
 import 'package:first_app/Screen/Thesis/leave.dart';
+import 'package:first_app/Screen/Thesis/profile.dart';
 import 'package:first_app/model/emp_leave.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -213,9 +214,9 @@ class _deligateState extends State<deligate> {
                 child: ElevatedButton(
                   child: Text("Send"),
                   onPressed: () {
-                    Navigator.pushReplacement(context,
+                    Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return leave();
+                      return profile();
                     }));
                   },
                 ),
