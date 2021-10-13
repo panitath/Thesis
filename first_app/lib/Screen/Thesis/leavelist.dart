@@ -1,6 +1,7 @@
+import 'package:first_app/Screen/Thesis/leave.dart';
 import 'package:first_app/Screen/Thesis/leavedetail.dart';
 import 'package:first_app/model/emp_leave.dart';
-import 'package:first_app/model/emp_leavelist.dart';
+import 'package:first_app/model/Empleavelist_form_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -9,157 +10,240 @@ class leave_list extends StatelessWidget {
   // Emp_leavelist leave = Emp_leavelist();
   // final List<Empleave> leavelist = List.generate(leave.);
 
+ 
+    
+  @override
+  Widget build(BuildContext context) {
+    List<Empleave> _empleaveList = [];
+    if (context.read<EmpleavelistFormmodel>().empleaveList!= null) {
+      _empleaveList = context.read<EmpleavelistFormmodel>().empleaveList;
+    }
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'ภาพรวมการลาหยุด',
+              style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+              //color: Colors.white,
+            ),
+          ),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.logout),
+              iconSize: 28.0,
+               onPressed: () {
+              //   Navigator.push(context,
+              //       MaterialPageRoute(builder: (context) => LogInScreen())
+              //   );
+              },
+            ),
+          ],
+          //backgroundColor: Color(0xFF473F97),
+        ),
+        //
+        body: ListView.builder(
+        itemCount: _empleaveList.length,
+        itemBuilder: (context, int index) {
+          //User data = provider.users[index];
+          return Card(
+            child: ListTile(
+              leading: CircleAvatar(
+                radius: 30,
+                child: FittedBox(
+                  child: Text('${index+1}',
+                    //style: TextStyle(color: iWhiteColor,fontSize: 20),
+                  ),
+                ),
+              ),
+              title: Text('${_empleaveList[index].leaveid}'),
+              subtitle: Text('${_empleaveList[index].startdate}'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>  EmpleaveDetail(Empleaves: _empleaveList[index]),
+                  ),
+                );
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
+  }
+
+class EmpleaveDetail extends StatefulWidget {
+  
+  final Empleave Empleaves;
+  
+  const EmpleaveDetail({Key? key, required this.Empleaves}) : super(key: key);
+
+  @override
+  _EmpleaveDetailState createState() => _EmpleaveDetailState();
+}
+
+class _EmpleaveDetailState extends State<EmpleaveDetail> {
+  final formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     
     return Scaffold(
-        appBar: AppBar(
-          title: Text("LeaveList"),
-        ),
-        body: Consumer(
-          builder: (context, Emp_leavelist provider, child) {
-            return ListView.builder(
-              itemCount: provider.transactions.length,
-              itemBuilder: (context, index) {
-                Empleave data = provider.transactions[index];
-                return Card(
-                  child: ListTile(title: Text(data.leaveid.toString()),
-                  subtitle: Text("วันที่ลา  "+ data.startdate.toString()), 
-                  onTap: (){
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context)=>LeaveDetail(leave : provider.transactions[index],)));
-                  }, 
+      appBar: AppBar(
+        title: Text('รายละเอียดการลา'),
+        //backgroundColor: iBlueColor,
+        actions: [
+          IconButton(
+            onPressed: () {
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(builder: (context) => LogInScreen()),
+              // );
+            },
+            icon: Icon(Icons.logout),
+          ),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0), 
+        child: Form(
+            key: formKey,
+        child: Column(
+          children: [
+            TextFormField(
+              decoration: InputDecoration(
+                border: UnderlineInputBorder(),
+                enabled: false,
+                labelText: 'ประเภทลา',
+                labelStyle: TextStyle(
+                    //color: iBlackColor,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 16),
+                enabledBorder: UnderlineInputBorder(
+                  //borderSide: BorderSide(color: iBlueColor),
                 ),
-                )
-                ;
-              },
-            );
-          },
-        ));
+                focusedBorder: UnderlineInputBorder(
+                  //borderSide: BorderSide(color: iBlueColor),
+                ),
+              ),
+              initialValue: '${widget.Empleaves.leaveid}',
+            ),
+            TextFormField(
+              decoration: InputDecoration(
+                border: UnderlineInputBorder(),
+                enabled: false,
+                labelText: 'วันที่เริ่มต้นการลา',
+                labelStyle: TextStyle(
+                   // color: iBlackColor,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 16),
+                enabledBorder: UnderlineInputBorder(
+                  //borderSide: BorderSide(color: iBlueColor),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  //borderSide: BorderSide(color: iBlueColor),
+                ),
+              ),
+              initialValue: '${widget.Empleaves.startdate}',
+            ),
+            TextFormField(
+              decoration: InputDecoration(
+                border: UnderlineInputBorder(),
+                enabled: false,
+                labelText: 'วันที่สิ้นสุดการลา',
+                labelStyle: TextStyle(
+                    //color: iBlackColor,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 16),
+                enabledBorder: UnderlineInputBorder(
+                  //borderSide: BorderSide(color: iBlueColor),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  //borderSide: BorderSide(color: iBlueColor),
+                ),
+              ),
+              initialValue: '${widget.Empleaves.enddate}',
+            ),
+            
+            Divider(),
+            TextFormField(
+              decoration: InputDecoration(
+                border: UnderlineInputBorder(),
+                enabled: false,
+                labelText: 'หมายเหตุ',
+                labelStyle: TextStyle(
+                    //color: iBlackColor,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 16),
+                enabledBorder: UnderlineInputBorder(
+                 // borderSide: BorderSide(color: iBlueColor),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  //borderSide: BorderSide(color: iBlueColor),
+                ),
+              ),
+              initialValue: '${widget.Empleaves.comment}',
+            ),
+            Container(
+                    // margin: EdgeInsets.only(top: 280),
+                    width: MediaQuery.of(context).size.width,
+                    child: ElevatedButton(
+                      // BorderRadius: new BorderRadius.circular(30.0),
+
+                      //height: 60,
+                      // color: iBlueColor,
+                      onPressed: () { 
+                        if (formKey.currentState!.validate()) {
+                          formKey.currentState!.save();
+
+                          //รับค่าจาก ProfileModel -> TextFormField -> BookingModel
+                         // context.read<PatientFormModel>().idCard = _idCard;
+                        //   context.read<EmpleavelistFormmodel>().leaveid =
+                        //      '${widget.Empleaves.leaveid}';
+                        //  context.read<EmpleavelistFormmodel>().startdate = '${widget.Empleaves.startdate}';
+                        //   context.read<EmpleavelistFormmodel>().hospital = '${widget.Empleaves.hospital}';
+                        //   context.read<EmpleavelistFormmodel>().phone = '${widget.Empleaves.phone}';
+                        //   context.read<EmpleavelistFormmodel>().dateappointment = '${widget.Patients.dateappointment}';
+
+                        //    List<PatientHospitel> Listpatient = [];
+                        //    if (context.read<EmpleavelistFormmodel>().patientList != null) {
+                          
+                        //   Listpatient = context.read<EmpleavelistFormmodel>().patientList;
+                        // }
+                        //    Listpatient.add(PatientHospitel(
+                        //      idCard: 11,
+                        //     firstName:  '${widget.Patients.firstName}',
+                        //     lastName: '${widget.Patients.lastName}',
+                        //     phone: '${widget.Patients.phone}',
+                        //     dateappointment: '${widget.Patients.dateappointment}'
+                        
+                            
+                        //     )
+                        // );
+                        
+                        // context.read<PatientFormModelHospitel>().patientList = Listpatient;
+                      
+                      }
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => leave()));
+                        }
+                      ,
+                      style: ElevatedButton.styleFrom(
+                        //primary: iBlueColor,
+                        shape: new RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(30.0),
+                        ),
+                      ),
+                      child: Text('ลบ',
+                          //style: TextStyle(fontSize: 20, color: iWhiteColor)),
+                    ),
+                  )
+            )],
+        ),
+      ),
+    ));
   }
 }
-
-   
-  // ListView.builder(itemBuilder: (context,int index){
-  //   return ListView.separated(
-  //       padding: EdgeInsets.all(8.0),
-  //       itemCount: enties.length,
-  //       itemBuilder: (context, index) {
-  //         return ProductTile(
-  //           item: ProductItem(
-  //             name: 'Product ${enties[index]}',
-  //             price: '฿25',
-  //             colorShade: colorCodes[index % 3],
-  //           ),
-  //         );
-  //       },
-  //       separatorBuilder: (context, index) => Divider(),
-  //     );
-  // }
-//   )
-// );
-    
-//   }
-// }
-
-
-
-
-
-    // final List<String> enties = <String>[
-    //   'A',
-    //   'B',
-    //   'C',
-    //   'D',
-    //   'E',
-    //   'F',
-    //   'G',
-    //   'H',
-    //   'I',
-    //   'J',
-    //   'K',
-    //   'L'
-    // ];
-    // final List<int> colorCodes = <int>[600, 500, 100];
-    // return Scaffold(
-    //   appBar: AppBar(
-    //     title: Text("LeaveList"),
-    //   ),
-    //   body: ListView.separated(
-    //     padding: EdgeInsets.all(8.0),
-    //     itemCount: enties.length,
-    //     itemBuilder: (context, index) {
-    //       return ProductTile(
-    //         item: ProductItem(
-    //           name: 'Product ${enties[index]}',
-    //           price: '฿25',
-    //           colorShade: colorCodes[index % 3],
-    //         ),
-    //       );
-    //     },
-    //     separatorBuilder: (context, index) => Divider(),
-    //   ),
-    // );
-//   }
-// }
-
-// class ProductItem {
-//   final String name;
-//   final String price;
-//   final int colorShade;
-
-//   const ProductItem(
-//       {Key? key,
-//       required this.name,
-//       required this.price,
-//       required this.colorShade});
-// }
-
-// class ProductTile extends StatelessWidget {
-//   //กล่อง
-//   final ProductItem item;
-//   const ProductTile({Key? key, required this.item}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return GestureDetector(
-//       onTap: () {
-//         Navigator.push(
-//           context,
-//           MaterialPageRoute(
-//             builder: (context) => ProductDetail(item: item),
-//           ),
-//         );
-//       },
-//       child: Container(
-//         height: 100,
-//         color: Colors.amber[item.colorShade],
-//         child: Center(
-//           child: Text('Entry ${item.name}'),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-// class ProductDetail extends StatelessWidget {
-//   final ProductItem item;
-
-//   const ProductDetail({Key? key, required this.item}) : super(key: key);
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Product Detail'),
-//       ),
-//       body: Column(
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         crossAxisAlignment: CrossAxisAlignment.center,
-//         children: [
-//           Text('Product Name: ${item.name}'),
-//           Text('Price: ${item.price}'),
-//         ],
-//       ),
-//     );
-//   }
-// }
-

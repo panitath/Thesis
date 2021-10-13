@@ -4,16 +4,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'leave.dart';
 
-class approve extends StatefulWidget {
-  const approve({Key? key}) : super(key: key);
+
+class Approve extends StatefulWidget {
+  const Approve({Key? key}) : super(key: key);
 
   @override
-  _approveState createState() => _approveState();
+  _ApproveState createState() => _ApproveState();
 }
 
-class _approveState extends State<approve> {
+class _ApproveState extends State<Approve> {
   String startdate = DateFormat('dd-MM-yyyy').format(DateTime.now());
   String enddate =DateFormat('dd-MM-yyyy').format(DateTime.now());
   List leavelist = ['ลากิจ', 'ลาพักผ่อน', 'ลาคลอด'];
@@ -37,6 +37,7 @@ class _approveState extends State<approve> {
       });
     }
   }
+
 
   @override
   Widget build(BuildContext context) {

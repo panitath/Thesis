@@ -1,18 +1,20 @@
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:first_app/Screen/Thesis/calendar.dart';
 import 'package:first_app/Screen/Thesis/clock.dart';
 import 'package:first_app/Screen/Thesis/leave.dart';
 import 'package:first_app/Screen/register.dart';
 import 'package:first_app/model/emp_leave.dart';
+import 'package:first_app/model/event_form_model.dart';
 import 'package:first_app/model/my_theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'Screen/Thesis/Deligate.dart';
-import 'Screen/Thesis/approve.dart';
+import 'Screen/Thesis/Approve.dart';
 import 'Screen/Thesis/profile_screen.dart';
 import 'Screen/login.dart';
-import 'model/emp_leavelist.dart';
+import 'model/Empleavelist_form_model.dart';
 
 
 // void main() {
@@ -24,8 +26,9 @@ import 'model/emp_leavelist.dart';
 //   runApp( MyApp());
 // }
 
-void main() {
+void main() async{
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(App());
 }
 
@@ -59,12 +62,12 @@ class MyApp extends StatelessWidget {
     return MultiProvider( 
       providers: [
       ChangeNotifierProvider(
-        create: (context) => Empleave()),
+        create: (context) => EmpleavelistFormmodel()),
         ChangeNotifierProvider(
         create: (context) => MyThemeModel()),
         
-        ChangeNotifierProvider(
-        create: (context) => Emp_leavelist(),),
+         ChangeNotifierProvider(
+        create: (context) => EventFormModel()),
         ],
     
       
@@ -89,7 +92,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
     int currentIndex = 4;
-  final screens = [deligate(),leave(),approve(),clock(),profile_screen()];
+  final screens = [deligate(),leave(),Approve(),clock(),Calendar()];
   @override
   Widget build(BuildContext context) => Scaffold(
        
@@ -117,7 +120,7 @@ body: screens[currentIndex],
         backgroundColor: Colors.blue,
       ),
        BottomNavigationBarItem(icon: Icon(Icons.account_box),
-        label:'Profile',
+        label:'Calendar',
         backgroundColor: Colors.blue,
       )
       ],
