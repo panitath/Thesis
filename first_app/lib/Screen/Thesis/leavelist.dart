@@ -45,11 +45,13 @@ class leave_list extends StatelessWidget {
         body: ListView.builder(
         itemCount: _empleaveList.length,
         itemBuilder: (context, int index) {
+          
           //User data = provider.users[index];
           return Card(
+            
             child: ListTile(
               leading: CircleAvatar(
-                radius: 30,
+                radius: 20,
                 child: FittedBox(
                   child: Text('${index+1}',
                     //style: TextStyle(color: iWhiteColor,fontSize: 20),
@@ -107,6 +109,7 @@ class _EmpleaveDetailState extends State<EmpleaveDetail> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0), 
+        
         child: Form(
             key: formKey,
         child: Column(
@@ -195,35 +198,7 @@ class _EmpleaveDetailState extends State<EmpleaveDetail> {
                       // color: iBlueColor,
                       onPressed: () { 
                         if (formKey.currentState!.validate()) {
-                          formKey.currentState!.save();
-
-                          //รับค่าจาก ProfileModel -> TextFormField -> BookingModel
-                         // context.read<PatientFormModel>().idCard = _idCard;
-                        //   context.read<EmpleavelistFormmodel>().leaveid =
-                        //      '${widget.Empleaves.leaveid}';
-                        //  context.read<EmpleavelistFormmodel>().startdate = '${widget.Empleaves.startdate}';
-                        //   context.read<EmpleavelistFormmodel>().hospital = '${widget.Empleaves.hospital}';
-                        //   context.read<EmpleavelistFormmodel>().phone = '${widget.Empleaves.phone}';
-                        //   context.read<EmpleavelistFormmodel>().dateappointment = '${widget.Patients.dateappointment}';
-
-                        //    List<PatientHospitel> Listpatient = [];
-                        //    if (context.read<EmpleavelistFormmodel>().patientList != null) {
-                          
-                        //   Listpatient = context.read<EmpleavelistFormmodel>().patientList;
-                        // }
-                        //    Listpatient.add(PatientHospitel(
-                        //      idCard: 11,
-                        //     firstName:  '${widget.Patients.firstName}',
-                        //     lastName: '${widget.Patients.lastName}',
-                        //     phone: '${widget.Patients.phone}',
-                        //     dateappointment: '${widget.Patients.dateappointment}'
-                        
-                            
-                        //     )
-                        // );
-                        
-                        // context.read<PatientFormModelHospitel>().patientList = Listpatient;
-                      
+                          formKey.currentState!.save();                   
                       }
                           Navigator.push(
                               context,

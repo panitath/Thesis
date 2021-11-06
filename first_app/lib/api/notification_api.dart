@@ -14,7 +14,7 @@ class NotificationApi {
       android: AndroidNotificationDetails(
         'channel id',
         'channel name',
-       // 'channel description',
+       //'channel description',
         importance: Importance.max,
       ),
       iOS: IOSNotificationDetails(),
@@ -74,55 +74,6 @@ class NotificationApi {
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
       );
-
-  /// Daily Notification at 8 am
-  // static void showScheduledNotification({
-  //   int id = 0,
-  //   String? title,
-  //   String? body,
-  //   String? payload,
-  // }) async =>
-  //     _notifications.zonedSchedule(
-  //       id,
-  //       title,
-  //       body,
-  //       _scheduleDaily(Time(8)),
-  //       await _notificationDetails(),
-  //       payload: payload,
-  //       androidAllowWhileIdle: true,
-  //       uiLocalNotificationDateInterpretation:
-  //           UILocalNotificationDateInterpretation.absoluteTime,
-  //       matchDateTimeComponents: DateTimeComponents.time,
-  //     );
-
-  /// Weekly Notification on Monday and Tuesday at 8 am
-  // static void showScheduledNotification({
-  //   int id = 0,
-  //   String? title,
-  //   String? body,
-  //   String? payload,
-  // }) async {
-  //   final scheduledDates =
-  //       _scheduleWeekly(Time(9, 24), days: [DateTime.monday, DateTime.tuesday]);
-
-  //   for (int i = 0; i < scheduledDates.length; i++) {
-  //     final scheduledDate = scheduledDates[i];
-
-  //     _notifications.zonedSchedule(
-  //       id + i,
-  //       title,
-  //       body,
-  //       scheduledDate,
-  //       await _notificationDetails(),
-  //       payload: payload,
-  //       androidAllowWhileIdle: true,
-  //       uiLocalNotificationDateInterpretation:
-  //           UILocalNotificationDateInterpretation.absoluteTime,
-  //       matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
-  //     );
-  //   }
-  // }
-
   static tz.TZDateTime _scheduleDaily(Time time) {
     final now = tz.TZDateTime.now(tz.local);
     final scheduledDate = tz.TZDateTime(tz.local, now.year, now.month, now.day,

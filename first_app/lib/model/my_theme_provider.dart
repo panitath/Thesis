@@ -4,7 +4,7 @@ class MyThemeModel extends ChangeNotifier {
   bool _isLightTheme = true;
 
   void changeTheme() {
-    _isLightTheme = !_isLightTheme;
+    _isLightTheme = _isLightTheme;
     notifyListeners();
   }
 

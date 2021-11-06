@@ -7,7 +7,7 @@ class Calendar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Calendar'),
+      appBar: AppBar(title: Text('ปฏิทิน'),
       ),body: CalendarWidget(),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add,color: Colors.white,),backgroundColor: Colors.blue,

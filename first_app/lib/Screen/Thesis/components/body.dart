@@ -28,10 +28,14 @@ class Body extends StatelessWidget {
                 width: 100,
                  height: 40),
             SizedBox(
-                width: 150,
-                 height: 40,
+                  width: 350,
+                height: 50,
                  
                 child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: new RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(30.0), ),
+                    ),
                   child: Text("บันทึกเวลา"),
                   onPressed: () {
                     Navigator.push(context,

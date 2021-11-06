@@ -1,8 +1,12 @@
 
+import 'package:first_app/Screen/Thesis/Deligate.dart';
+import 'package:first_app/Screen/Thesis/leave.dart';
 import 'package:first_app/Screen/Thesis/profile.dart';
+import 'package:first_app/model/Empleavelist_form_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 
 
@@ -47,8 +51,9 @@ class _ApproveState extends State<Approve> {
           title: Text("อนุมัติการลา"),
         ),
         body: SingleChildScrollView(
-          child: Card(
-              child: Column(
+          child: Consumer<EmpleavelistFormmodel>(
+          builder: (context, form, child) {
+           return  Column(
             children: [
               Container(
                   // color: Colors.cyan,
@@ -129,24 +134,7 @@ class _ApproveState extends State<Approve> {
                         ),
                         Column(
                           children: <Widget>[
-                            DropdownButton<String>(
-                              value: leavetype,
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  leavetype = newValue!;
-                                });
-                              },
-                              items: <String>[
-                                'ลากิจ',
-                                'ลาพักผ่อน',
-                                'ลาคลอด'
-                              ].map<DropdownMenuItem<String>>((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              }).toList(),
-                            ),
+                             Text('${form.leaveid}',),
                           ],
                         ),
                       ]),
@@ -168,9 +156,11 @@ class _ApproveState extends State<Approve> {
                         ],
                       ),
                       Column(
+                        
                         children: <Widget>[
                           Row(children: <Widget>[
-                            Text(enddate),
+                            
+                            Text('${form.startdate}',),
                             // IconButton(
                             //   icon: Icon(Icons.calendar_today),
                             //   onPressed: () {
@@ -200,7 +190,8 @@ class _ApproveState extends State<Approve> {
                       Column(
                         children: <Widget>[
                           Row(children: <Widget>[
-                            Text(enddate),
+                            
+                            Text('${form.enddate}'),
                             // IconButton(
                             //   icon: Icon(Icons.calendar_today),
                             //   onPressed: () {
@@ -232,7 +223,10 @@ class _ApproveState extends State<Approve> {
                             SizedBox(
                               height: 50,
                               width: 250,
-                              child: TextField(),
+                              child: Text('${form.comment}'== ''  ? '-' : '${form.comment}'.toString()),
+                              
+
+                              
                             )
                           ])
                         ],
@@ -257,24 +251,36 @@ class _ApproveState extends State<Approve> {
                         children: <Widget>[
                           Row(children: <Widget>[
                             SizedBox(
-                              height: 50,
-                              width: 250,
-                              child: TextField(),
-                            )
+                             height: 50,
+                                  width: 250,
+                                  child: TextFormField(
+                                    decoration: InputDecoration(
+                                      enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.grey),
+                                      borderRadius: BorderRadius.all(Radius.circular(30))),
+                                      filled: false,fillColor: Colors.grey
+                                    )))
                           ])
                         ],
                       ),
                     ]),
               )),
               SizedBox(
-                width: double.infinity,
+                width: 350,
                 height: 50,
                 child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: new RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(30.0),
+                      ),
+                    ),
                   child: Text("อนุมัติ"),
                   onPressed: () {
+
+                   
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return profile();
+                      return deligate();
                     }));
                   },
                 ),
@@ -283,20 +289,30 @@ class _ApproveState extends State<Approve> {
                 width: 150,
                  height: 10),
               SizedBox(
-                width: double.infinity,
-                 height: 50,
+               width: 350,
+                height: 50,
                 child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: new RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(30.0),
+                      ),
+                    ),
                   child: Text("ปฏิเสธ"),
                   onPressed: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return profile();
+                      return deligate();
                     }));
                   },
                 ),
               ),
             ],
-          )),
-        ));
+          );
+          
+          }
+    ),
+  )
+  );
+        
   }
 }
