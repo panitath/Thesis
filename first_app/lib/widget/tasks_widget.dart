@@ -1,8 +1,6 @@
-
-
-import 'package:first_app/Screen/Thesis/event_viewing_page.dart';
 import 'package:first_app/model/event_data_source.dart';
 import 'package:first_app/model/event_form_model.dart';
+import 'package:first_app/pages/event_viewing_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';

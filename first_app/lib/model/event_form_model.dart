@@ -1,7 +1,8 @@
 
 
-import 'package:first_app/Screen/Thesis/utils.dart';
+
 import 'package:first_app/model/even.dart';
+import 'package:first_app/pages/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
