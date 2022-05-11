@@ -1,5 +1,5 @@
 
-import 'package:first_app/model/delegate.dart';
+import 'package:first_app/model/delegate_model.dart';
 import 'package:flutter/material.dart';
 
 class DelegateProvider extends ChangeNotifier {
@@ -9,21 +9,23 @@ class DelegateProvider extends ChangeNotifier {
   String? leavetype;
   int? empcodemanager;
   String? managername;
+    String? manageremail;
   DateTime? startdate;
   DateTime? enddate;
   int? empcodedelegate;
   String? delegatename;
   DateTime? createdate;
 
-List<Delegate>? _delegateList;
 
 
-  get delgateList => this._delegateList;
+List<DelegateItem>? _delegateList;
+  get delegateList => this._delegateList;
 
-  set delegateList(value) {
+  set setdelegateList(value) {
     this._delegateList = value;
     notifyListeners();
   }
+
 
 get getempcode => this.empcode;
 
@@ -54,6 +56,13 @@ get getempcode => this.empcode;
     notifyListeners();
   } 
 
+  get getmanageremail => this.manageremail;
+
+  set setemanageremail(manageremail) {
+    this.manageremail = manageremail;
+    notifyListeners();
+  } 
+
   get getstartdate => this.startdate;
 
   set setstartdate(startdate) {
@@ -74,3 +83,35 @@ get getempcode => this.empcode;
     notifyListeners();
   }
 }
+
+class DelegateItem {
+  final int empcode;
+  final String leavetype;
+  final int empcodemanager;
+  final String managername;
+  final String manageremail;
+  final DateTime startdate;
+  final DateTime enddate;
+  final int empcodedelegate;
+  final String delegatename;
+  final DateTime createdate;
+
+
+  const DelegateItem({
+    Key? key,
+    required this.empcode,
+   required this.leavetype,
+   required this.empcodemanager,
+   required this.managername,
+   required this.manageremail,
+   required this.startdate,
+   required this.enddate,
+   required this.empcodedelegate,
+   required this.delegatename,
+   required this.createdate
+
+  });
+
+  add(Map<String, String> map) {}
+}
+

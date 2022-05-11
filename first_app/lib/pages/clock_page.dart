@@ -3,7 +3,7 @@ import 'package:first_app/Screen/components/body.dart';
 import 'package:first_app/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-
+import 'package:geolocator/geolocator.dart';
 
 class clock extends StatelessWidget {
   @override

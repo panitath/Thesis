@@ -1,19 +1,26 @@
 import 'dart:async';
-import 'package:first_app/model/delegate.dart';
+import 'package:first_app/model/Empleave_provider.dart';
+import 'package:first_app/model/delegate_model.dart';
+import 'package:first_app/model/emp_api_model.dart';
 import 'package:first_app/model/emp_leave.dart';
 import 'package:first_app/model/employee.dart';
+import 'package:first_app/model/user_profile_provider.dart';
 import 'package:first_app/services/empleave_services.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
 
 class EmpleaveController {
   final Services services;
   List<Empleave> empleaves = List.empty();
   List<Empleave> empleaveList = List.empty();
   Employee? empdelegate;
+  Delegate? empcheckdelegate;
+   List<Delegate> delegate = List.empty();
 
   StreamController<bool> onSyncController = StreamController<bool>.broadcast();
   Stream<bool> get onSync => onSyncController.stream;
   StreamController<bool> onSyncHosBookingController =
-      StreamController<bool>.broadcast();
+  StreamController<bool>.broadcast();
   Stream<bool> get onSyncHosBooking => onSyncHosBookingController.stream;
   bool _isDisposed = false;
   EmpleaveController(this.services);
@@ -46,7 +53,14 @@ class EmpleaveController {
 
 
   void addEmpLeave(Empleave items) async {
+  //   final emp = await getemp(items.empcode.toString());
+  //  items.empcodemanager = int.parse(emp.employee!.employee!.empcodemanager.toString()) ;
+  // String managerfirstname = emp.employee!.employee!.firstnamemanager.toString(); 
+  // String managerlastname = emp.employee!.employee!.lastnamemanager.toString();   
+  //  items.managername = '${managerfirstname}'+ ' ' +'${managerlastname}';
     services.addEmpLeave(items);
+      
+    
   }
 
   Future<List<Empleave>> fecthEmpleaveList() async {
@@ -71,19 +85,13 @@ Future<void> approveEmpleave(
     await services.updateapproved(_empcode,_empcodemanager,_leavetype, _startdate, _enddate, _status);
   }
 
-
-
-
-
-
-
   /// Delegate
 
   void addDelegate(Delegate item) async {
     services.addDelegate(item);
   }
 
-  Future<Employee?> fecthEmpDelegate(String empcodedelegate) async {
+ Future<Employee?> fecthEmpDelegate(String empcodedelegate) async {
     print('con' + empcodedelegate.toString());
     if (_isDisposed) {
       onSyncController = StreamController<bool>.broadcast();
@@ -95,6 +103,41 @@ Future<void> approveEmpleave(
     return empdelegate;
   }
 
+  Future<List<Delegate>> fecthEmpDelegateList(String empcodedelegate) async {
+    
+    if (_isDisposed) {
+      onSyncController = StreamController<bool>.broadcast();
+    }
+    onSyncController.add(true);
+    delegate = await services.getEmpDelegateList(int.parse(empcodedelegate));
+    onSyncController.add(false);
+    dispose();
+    return delegate;
+  }
+
+  Future<EmpAPIModel> getemp(String empcode) async {
+    onSyncController.add(true);
+    var model = await services.getemp( int.parse(empcode));
+    onSyncController.add(false);
+    return model;
+  }
+
+
+   Future<Delegate?> CheckEmpDelegate(String empcodedelegate, String leavetype,
+                                              DateTime fromDate,DateTime toDate) async {
+    if (_isDisposed) {
+      onSyncController = StreamController<bool>.broadcast();
+    }
+      DateTime checkfromDate = new DateTime(fromDate.year, fromDate.month, fromDate.day);
+    DateTime checktoDate = new DateTime(toDate.year, toDate.month, toDate.day);
+    
+    onSyncController.add(true);
+    empcheckdelegate = await services.checkEmpDelegate(empcodedelegate,leavetype,checkfromDate,checktoDate);
+    onSyncController.add(false);
+    dispose();
+    return empcheckdelegate;
+  }
+
 
 
 
@@ -102,5 +145,6 @@ Future<void> approveEmpleave(
   void dispose() {
     onSyncHosBookingController.close();
     _isDisposed = true;
-  }
+
+}
 }

@@ -7,6 +7,8 @@ class ClockProvider extends ChangeNotifier {
   DateTime? clocktime;
   String? currentlocation;
   DateTime? createdate;
+  DateTime? fromDate;
+  DateTime? toDate;
 
 List<ClockItem>? _empclockList;
   get empclockList => this._empclockList;
@@ -25,7 +27,7 @@ get getempcode => this.empcode;
 
   get getclocktime => this.clocktime;
 
-  set setleaveid(clocktime) {
+  set setclocktime(clocktime) {
     this.clocktime = clocktime;
     notifyListeners();
   }
@@ -44,6 +46,20 @@ get getempcode => this.empcode;
     notifyListeners();
   }
 
+    get getfromDate => this.fromDate;
+
+  set setfromDate(fromDate) {
+    this.fromDate = fromDate;
+    notifyListeners();
+  }
+
+  get gettoDate => this.toDate;
+
+  set settoDate(toDate) {
+    this.toDate = toDate;
+    notifyListeners();
+  }
+
 }
 
 
@@ -53,6 +69,8 @@ class ClockItem {
   final DateTime clocktime;
   final String currentlocation;
   final DateTime createdate;
+   final DateTime fromDate;
+    final DateTime toDate;
 
   const ClockItem({
     Key? key,
@@ -60,6 +78,8 @@ class ClockItem {
     required this.clocktime,
     required this.currentlocation,
     required this.createdate,
+    required this.fromDate,
+    required this.toDate,
   });
 
   add(Map<String, String> map) {}

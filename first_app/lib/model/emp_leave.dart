@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 
 class Empleave {
   int empcode;
+   String firstname;
+    String lastname;
+    int leaveid;
   String leavetype;
   DateTime startdate;
   DateTime enddate;
@@ -14,6 +17,9 @@ class Empleave {
 
   Empleave(
       this.empcode,
+      this.firstname,
+     this.lastname,
+     this.leaveid,
       this.leavetype,
       this.startdate,
       this.enddate,
@@ -28,6 +34,10 @@ class Empleave {
   ) {
     return Empleave(
       json['empcode'] as int,
+      
+      json['firstname'] as String,
+      json['lastname'] as String,
+      json['leaveid'] as int,
       json['leavetype'] as String,
       json['startdate'] as DateTime,
       json['enddate'] as DateTime,
@@ -44,6 +54,9 @@ class Empleave {
   ) {
     return Empleave(
       json['empcode'] as int,
+      json['firstname'] as String,
+      json['lastname'] as String,
+       json['leaveid'] as int,
       json['leavetype'] as String,
       json['startdate']!.toDate() as DateTime,
       json['enddate']!.toDate() as DateTime,
@@ -134,6 +147,9 @@ class SinglEmpleaves {
 
 class EmpleaveList {
   int empcode;
+   String firstname;
+    String lastname;
+      int leaveid;
   String leavetype;
   DateTime startdate;
   DateTime enddate;
@@ -146,6 +162,9 @@ class EmpleaveList {
 
   EmpleaveList(
       this.empcode,
+      this.firstname,
+    this.lastname,
+    this.leaveid,
       this.leavetype,
       this.startdate,
       this.enddate,
@@ -159,6 +178,9 @@ class EmpleaveList {
   ) {
     return EmpleaveList(
       json['empcode'] as int,
+       json['firstname'] as String,
+        json['lastname'] as String,
+         json['leaveid'] as int,
       json['leavetype'] as String,
       json['startdate'] as DateTime,
       json['enddate'] as DateTime,
@@ -175,6 +197,9 @@ class EmpleaveList {
   ) {
     return EmpleaveList(
       json['empcode'] as int,
+       json['firstname'] as String,
+        json['lastname'] as String,
+        json['leaveid'] as int,
       json['leavetype'] as String,
       json['startdate']!.toDate() as DateTime,
       json['enddate']!.toDate() as DateTime,

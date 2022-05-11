@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 
 class UserProfileProvider extends ChangeNotifier{
-  late String cid;
+  int? empcode;
   String? email;
   String? firstName;
-  int? hospitalID;
-  String? hospitalName;
-  String? lastName;
+   String? lastName;
   String? password;
   String? position;
   int? roleID;
   String? roleName;
   String? tel;
+  String? grade;
   UserProfileProvider? _profile;
 
   get profile => this._profile;
@@ -21,17 +20,12 @@ class UserProfileProvider extends ChangeNotifier{
     notifyListeners();
   }
   
-//   UserProfileProvider? get getProfile => this.profile;
 
-//  set setProfile(UserProfileProvider? profile) {
-//    this.profile = profile;
-//    notifyListeners();
-//  } 
 
- String? get getCid => this.cid;
+ int? get getempcode => this.empcode;
 
- set setCid(String cid) {
-   this.cid = cid;
+ set setCid(int empcode) {
+   this.empcode = empcode;
    notifyListeners();
  } 
 
@@ -49,20 +43,7 @@ class UserProfileProvider extends ChangeNotifier{
   notifyListeners();
  } 
 
-  get getHospitalID => this.hospitalID;
-
- set setHospitalID( hospitalID) {
-  this.hospitalID = hospitalID;
-  notifyListeners();
- } 
-
-  get getHospitalName => this.hospitalName;
-
- set setHospitalName( hospitalName) {
-   this.hospitalName = hospitalName;
-   notifyListeners();
- } 
-
+ 
   get getLastName => this.lastName;
 
  set setLastName( lastName) {
@@ -102,6 +83,13 @@ class UserProfileProvider extends ChangeNotifier{
 
  set setTel( tel) {
    this.tel = tel;
+   notifyListeners();
+ } 
+
+  get getGrade => this.grade;
+
+ set getGrade( grade) {
+   this.grade = grade;
    notifyListeners();
  } 
 }

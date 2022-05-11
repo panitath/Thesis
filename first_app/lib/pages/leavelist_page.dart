@@ -2,21 +2,20 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:first_app/controller/empleave_controller.dart';
 import 'package:first_app/model/Empleave_provider.dart';
 import 'package:first_app/model/emp_leave.dart';
-import 'package:first_app/pages/leave_page.dart';
+import 'package:first_app/model/leave_postapi_model.dart';
 import 'package:first_app/services/empleave_services.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
 import 'profile_page.dart';
+import 'profilem_page.dart';
 
 class Leave_list extends StatefulWidget {
   var service = EmpleaveServices();
-
   var controller;
-  var authController;
+
   Leave_list() {
     controller = EmpleaveController(service);
+    //  controller = EAuthenController(service1);
   }
 
   @override
@@ -28,6 +27,7 @@ class _Leave_listState extends State<Leave_list> {
   bool isLoading = false;
   EmpleaveProvider _profile = EmpleaveProvider();
   final auth = FirebaseAuth.instance;
+  LeavePostAPIModel? model;
 
   @override
   void initState() {
@@ -42,12 +42,8 @@ class _Leave_listState extends State<Leave_list> {
     var empleaveList = await widget.controller.fecthEmpleaveList();
     setState(() {
       _empleaveList = empleaveList;
-      //     context.read<EmpleaveProvider>().empleaveList = empleaveList;
-      // empleaveList = empleaveList;
     });
   }
-
-  
 
   Widget get body => isLoading
       ? CircularProgressIndicator()
@@ -61,19 +57,23 @@ class _Leave_listState extends State<Leave_list> {
                       child: Text('ไม่พบข้อมูลการลา')));
             }
             return Card(
-              child: ListTile(  tileColor: Colors.grey[100],
+              child: ListTile(
+                tileColor: Colors.grey[100],
                 onLongPress: () {},
-                 leading: CircleAvatar(
-                    backgroundColor: Color(0xFF21BFBD),
-                radius: 30,
-                child: FittedBox(
-                  child: Text('${index+1}',
-                    style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),
+                leading: CircleAvatar(
+                  backgroundColor: Color(0xFF21BFBD),
+                  radius: 30,
+                  child: FittedBox(
+                    child: Text(
+                      '${index + 1}',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                    ),
                   ),
                 ),
-              ),
                 title: Text('${_empleaveList[index].leavetype}'),
-                subtitle: Text('วันที่ลา ${_empleaveList[index].startdate.day}/${_empleaveList[index].startdate.month}/${_empleaveList[index].startdate.year}'),
+                subtitle: Text(
+                    'วันที่ลา ${_empleaveList[index].startdate.day}/${_empleaveList[index].startdate.month}/${_empleaveList[index].startdate.year}'),
                 onTap: () {
                   Navigator.push(
                     context,
@@ -102,16 +102,15 @@ class _Leave_listState extends State<Leave_list> {
               )
               //color: iWhiteColor),
               ),
-              automaticallyImplyLeading: false,
-               actions: [
+          automaticallyImplyLeading: false,
+          actions: [
             IconButton(
               icon: Icon(Icons.home),
               color: Colors.white,
               iconSize: 28.0,
-               onPressed: () {
+              onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => profile())
-                );
+                    MaterialPageRoute(builder: (context) => profile()));
               },
             ),
           ],
@@ -219,426 +218,331 @@ class _EmpleaveDetailState extends State<EmpleaveDetail> {
             padding: const EdgeInsets.all(8.0),
             child: Form(
                 key: formKey,
-                child: Column(
-                  children: [
-                    // Padding(
-                    //   padding: const EdgeInsets.only(bottom: 10.0, ),
+                child: Column(children: [
+                  // Padding(
+                  //   padding: const EdgeInsets.only(bottom: 10.0, ),
 
-                    
-                    Container(
-                      //height: size.height * .10,
-                      decoration: BoxDecoration(
-                          //color: Colors.grey[200],
-                          //border: Border.all(color: Colors.green,width: 3.0,),
-                          borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(0),
-                              bottomRight: Radius.circular(0))),
+                  Container(
+                    //height: size.height * .10,
+                    decoration: BoxDecoration(
+                        //color: Colors.grey[200],
+                        //border: Border.all(color: Colors.green,width: 3.0,),
+                        borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(0),
+                            bottomRight: Radius.circular(0))),
 
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.all(15.0),
-                              child: Column(
-                                children: <Widget>[
-                                  Text("ประเภทลา",
-                                      style: TextStyle(fontSize: 18)),
-                                ],
-                              ),
-                            ),
-                            Column(
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Column(
                               children: <Widget>[
-                                Text('${widget.Empleaves.leavetype}',
+                                Text("ประเภทลา",
                                     style: TextStyle(fontSize: 18)),
                               ],
                             ),
-                          ]),
-                    ),
+                          ),
+                          Column(
+                            children: <Widget>[
+                              Text('${widget.Empleaves.leavetype}',
+                                  style: TextStyle(fontSize: 18)),
+                            ],
+                          ),
+                        ]),
+                  ),
 
+                  Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            // color: Colors.grey[300],
+                            borderRadius: BorderRadius.only(
+                                // topRight: Radius.circular(60.0),
+                                // topLeft: Radius.circular(60.0),
+                                // bottomLeft: Radius.circular(36),
+                                // bottomRight: Radius.circular(36))
+                                )),
+                        // color: Colors.cyan,
+                        // child: Padding(
+                        //   padding: const EdgeInsets.only(top: 12.0, bottom: 12.0, ),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              Column(
+                                children: <Widget>[
+                                  Text(
+                                    "วันที่เริ่มต้นการลา ",
+                                    style: TextStyle(
+                                        fontSize: 18, color: Colors.black),
+                                  ),
+                                  // Padding(
+                                  //   padding: EdgeInsets.all(8.0),
+                                  //   child: Text(
+                                  //     '${date.day}/${date.month}/${date.year}',
+                                  //     textAlign: TextAlign.center,
+                                  //     style: TextStyle(fontSize: 15, color: Colors.black),
+                                  //   ),
+                                  // ),
+                                ],
+                              ),
+                              Column(
+                                children: <Widget>[
+                                  Text(
+                                    '${widget.Empleaves.startdate.day}'
+                                    '/${widget.Empleaves.startdate.month}'
+                                    '/${widget.Empleaves.startdate.year}',
+                                    style: TextStyle(
+                                        fontSize: 18, color: Colors.black),
+                                  ),
+                                ],
+                              ),
+                            ]),
+                      )),
+                  Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            // color: Colors.grey[300],
+                            borderRadius: BorderRadius.only(
+                                // topRight: Radius.circular(60.0),
+                                // topLeft: Radius.circular(60.0),
+                                // bottomLeft: Radius.circular(36),
+                                // bottomRight: Radius.circular(36))
+                                )),
+                        // color: Colors.cyan,
+                        // child: Padding(
+                        //   padding: const EdgeInsets.only(top: 12.0, bottom: 12.0, ),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              Column(
+                                children: <Widget>[
+                                  Text(
+                                    "เวลาเริ่มต้นการลา ",
+                                    style: TextStyle(
+                                        fontSize: 18, color: Colors.black),
+                                  ),
+                                  // Padding(
+                                  //   padding: EdgeInsets.all(8.0),
+                                  //   child: Text(
+                                  //     '${date.day}/${date.month}/${date.year}',
+                                  //     textAlign: TextAlign.center,
+                                  //     style: TextStyle(fontSize: 15, color: Colors.black),
+                                  //   ),
+                                  // ),
+                                ],
+                              ),
+                              Column(
+                                children: <Widget>[
+                                  Text(
+                                    '${widget.Empleaves.startdate.hour}'
+                                    ':${widget.Empleaves.startdate.minute} น.',
+                                    style: TextStyle(
+                                        fontSize: 18, color: Colors.black),
+                                  ),
+                                ],
+                              ),
+                            ]),
+                      )),
 
-                   
-
-                    Padding(
-                        padding: const EdgeInsets.all(
-                         15.0
-                        ),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              // color: Colors.grey[300],
-                              borderRadius: BorderRadius.only(
-                                  // topRight: Radius.circular(60.0),
-                                  // topLeft: Radius.circular(60.0),
-                                  // bottomLeft: Radius.circular(36),
-                                  // bottomRight: Radius.circular(36))
-                                  )),
-                          // color: Colors.cyan,
-                          // child: Padding(
-                          //   padding: const EdgeInsets.only(top: 12.0, bottom: 12.0, ),
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                Column(
-                                  children: <Widget>[
-                                    Text(
-                                      "วันที่เริ่มต้นการลา ",
-                                      style: TextStyle(
-                                          fontSize: 18, color: Colors.black),
-                                    ),
-                                    // Padding(
-                                    //   padding: EdgeInsets.all(8.0),
-                                    //   child: Text(
-                                    //     '${date.day}/${date.month}/${date.year}',
-                                    //     textAlign: TextAlign.center,
-                                    //     style: TextStyle(fontSize: 15, color: Colors.black),
-                                    //   ),
-                                    // ),
-                                  ],
-                                ),
-                                Column(
-                                  children: <Widget>[
-                                    Text(
-                                      '${widget.Empleaves.startdate.day}''/${widget.Empleaves.startdate.month}''/${widget.Empleaves.startdate.year}',
-                                      style: TextStyle(
-                                          fontSize: 18, color: Colors.black),
-                                    ),
-                                  ],
-                                ),
-                              ]),
-                        )),
-                         Padding(
-                        padding: const EdgeInsets.all(
-                         15.0
-                        ),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              // color: Colors.grey[300],
-                              borderRadius: BorderRadius.only(
-                                  // topRight: Radius.circular(60.0),
-                                  // topLeft: Radius.circular(60.0),
-                                  // bottomLeft: Radius.circular(36),
-                                  // bottomRight: Radius.circular(36))
-                                  )),
-                          // color: Colors.cyan,
-                          // child: Padding(
-                          //   padding: const EdgeInsets.only(top: 12.0, bottom: 12.0, ),
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                Column(
-                                  children: <Widget>[
-                                    Text(
-                                      "เวลาเริ่มต้นการลา ",
-                                      style: TextStyle(
-                                          fontSize: 18, color: Colors.black),
-                                    ),
-                                    // Padding(
-                                    //   padding: EdgeInsets.all(8.0),
-                                    //   child: Text(
-                                    //     '${date.day}/${date.month}/${date.year}',
-                                    //     textAlign: TextAlign.center,
-                                    //     style: TextStyle(fontSize: 15, color: Colors.black),
-                                    //   ),
-                                    // ),
-                                  ],
-                                ),
-                                Column(
-                                  children: <Widget>[
-                                    Text(
-                                      '${widget.Empleaves.startdate.hour}'':${widget.Empleaves.startdate.minute} น.',
-                                      style: TextStyle(
-                                          fontSize: 18, color: Colors.black),
-                                    ),
-                                  ],
-                                ),
-                              ]),
-                        )),
-
-                    Padding(
-                         padding: const EdgeInsets.all(
-                         15.0
-                        
-                        ),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              // color: Colors.grey[300],
-                              borderRadius: BorderRadius.only(
-                                  // topRight: Radius.circular(60.0),
-                                  // topLeft: Radius.circular(60.0),
-                                  // bottomLeft: Radius.circular(36),
-                                  // bottomRight: Radius.circular(36))
-                                  )),
-                          // color: Colors.cyan,
-                          // child: Padding(
-                          //   padding: const EdgeInsets.only(top: 12.0, bottom: 12.0, ),
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                Column(
-                                  children: <Widget>[
-                                    Text(
-                                      "วันสิ้นสุดการลา ",
-                                      style: TextStyle(
-                                          fontSize: 18, color: Colors.black),
-                                    ),
-                                    // Padding(
-                                    //   padding: EdgeInsets.all(8.0),
-                                    //   child: Text(
-                                    //     '${date.day}/${date.month}/${date.year}',
-                                    //     textAlign: TextAlign.center,
-                                    //     style: TextStyle(fontSize: 15, color: Colors.black),
-                                    //   ),
-                                    // ),
-                                  ],
-                                ),
-                                Column(
-                                  children: <Widget>[
-                                    Text(
-                                      '${widget.Empleaves.enddate.day}''/${widget.Empleaves.enddate.month}''/${widget.Empleaves.enddate.year}',
-                                      style: TextStyle(
-                                          fontSize: 18, color: Colors.black),
-                                    ),
-                                  ],
-                                ),
-                              ]),
-                        )),
+                  Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            // color: Colors.grey[300],
+                            borderRadius: BorderRadius.only(
+                                // topRight: Radius.circular(60.0),
+                                // topLeft: Radius.circular(60.0),
+                                // bottomLeft: Radius.circular(36),
+                                // bottomRight: Radius.circular(36))
+                                )),
+                        // color: Colors.cyan,
+                        // child: Padding(
+                        //   padding: const EdgeInsets.only(top: 12.0, bottom: 12.0, ),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              Column(
+                                children: <Widget>[
+                                  Text(
+                                    "วันสิ้นสุดการลา ",
+                                    style: TextStyle(
+                                        fontSize: 18, color: Colors.black),
+                                  ),
+                                  // Padding(
+                                  //   padding: EdgeInsets.all(8.0),
+                                  //   child: Text(
+                                  //     '${date.day}/${date.month}/${date.year}',
+                                  //     textAlign: TextAlign.center,
+                                  //     style: TextStyle(fontSize: 15, color: Colors.black),
+                                  //   ),
+                                  // ),
+                                ],
+                              ),
+                              Column(
+                                children: <Widget>[
+                                  Text(
+                                    '${widget.Empleaves.enddate.day}'
+                                    '/${widget.Empleaves.enddate.month}'
+                                    '/${widget.Empleaves.enddate.year}',
+                                    style: TextStyle(
+                                        fontSize: 18, color: Colors.black),
+                                  ),
+                                ],
+                              ),
+                            ]),
+                      )),
+                  Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            // color: Colors.grey[300],
+                            borderRadius: BorderRadius.only(
+                                // topRight: Radius.circular(60.0),
+                                // topLeft: Radius.circular(60.0),
+                                // bottomLeft: Radius.circular(36),
+                                // bottomRight: Radius.circular(36))
+                                )),
+                        // color: Colors.cyan,
+                        // child: Padding(
+                        //   padding: const EdgeInsets.only(top: 12.0, bottom: 12.0, ),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              Column(
+                                children: <Widget>[
+                                  Text(
+                                    "เวลาสิ้นสุดการลา ",
+                                    style: TextStyle(
+                                        fontSize: 18, color: Colors.black),
+                                  ),
+                                  // Padding(
+                                  //   padding: EdgeInsets.all(8.0),
+                                  //   child: Text(
+                                  //     '${date.day}/${date.month}/${date.year}',
+                                  //     textAlign: TextAlign.center,
+                                  //     style: TextStyle(fontSize: 15, color: Colors.black),
+                                  //   ),
+                                  // ),
+                                ],
+                              ),
+                              Column(
+                                children: <Widget>[
+                                  Text(
+                                    '${widget.Empleaves.enddate.hour}'
+                                    ':${widget.Empleaves.enddate.minute} น.',
+                                    style: TextStyle(
+                                        fontSize: 18, color: Colors.black),
+                                  ),
+                                ],
+                              ),
+                            ]),
+                      )),
+                  Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            // color: Colors.grey[300],
+                            borderRadius: BorderRadius.only(
+                                // topRight: Radius.circular(60.0),
+                                // topLeft: Radius.circular(60.0),
+                                // bottomLeft: Radius.circular(36),
+                                // bottomRight: Radius.circular(36))
+                                )),
+                        // color: Colors.cyan,
+                        // child: Padding(
+                        //   padding: const EdgeInsets.only(top: 12.0, bottom: 12.0, ),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              Column(
+                                children: <Widget>[
+                                  Text(
+                                    "หมายเหตุ ",
+                                    style: TextStyle(
+                                        fontSize: 18, color: Colors.black),
+                                  ),
+                                  // Padding(
+                                  //   padding: EdgeInsets.all(8.0),
+                                  //   child: Text(
+                                  //     '${date.day}/${date.month}/${date.year}',
+                                  //     textAlign: TextAlign.center,
+                                  //     style: TextStyle(fontSize: 15, color: Colors.black),
+                                  //   ),
+                                  // ),
+                                ],
+                              ),
+                              Column(
+                                children: <Widget>[
+                                  Text(
+                                    '${widget.Empleaves.comment}' == 'null'
+                                        ? ""
+                                        : '${widget.Empleaves.comment}',
+                                    style: TextStyle(
+                                        fontSize: 18, color: Colors.black),
+                                  ),
+                                ],
+                              ),
+                            ]),
+                      )),
  Padding(
-                        padding: const EdgeInsets.all(
-                         15.0
-                        ),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              // color: Colors.grey[300],
-                              borderRadius: BorderRadius.only(
-                                  // topRight: Radius.circular(60.0),
-                                  // topLeft: Radius.circular(60.0),
-                                  // bottomLeft: Radius.circular(36),
-                                  // bottomRight: Radius.circular(36))
-                                  )),
-                          // color: Colors.cyan,
-                          // child: Padding(
-                          //   padding: const EdgeInsets.only(top: 12.0, bottom: 12.0, ),
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                Column(
-                                  children: <Widget>[
-                                    Text(
-                                      "เวลาสิ้นสุดการลา ",
-                                      style: TextStyle(
-                                          fontSize: 18, color: Colors.black),
-                                    ),
-                                    // Padding(
-                                    //   padding: EdgeInsets.all(8.0),
-                                    //   child: Text(
-                                    //     '${date.day}/${date.month}/${date.year}',
-                                    //     textAlign: TextAlign.center,
-                                    //     style: TextStyle(fontSize: 15, color: Colors.black),
-                                    //   ),
-                                    // ),
-                                  ],
-                                ),
-                                Column(
-                                  children: <Widget>[
-                                    Text(
-                                      '${widget.Empleaves.enddate.hour}'':${widget.Empleaves.enddate.minute} น.',
-                                      style: TextStyle(
-                                          fontSize: 18, color: Colors.black),
-                                    ),
-                                  ],
-                                ),
-                              ]),
-                        )),
-                    Padding(
-                         padding: const EdgeInsets.all(
-                         15.0
-                        
-                        ),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              // color: Colors.grey[300],
-                              borderRadius: BorderRadius.only(
-                                  // topRight: Radius.circular(60.0),
-                                  // topLeft: Radius.circular(60.0),
-                                  // bottomLeft: Radius.circular(36),
-                                  // bottomRight: Radius.circular(36))
-                                  )),
-                          // color: Colors.cyan,
-                          // child: Padding(
-                          //   padding: const EdgeInsets.only(top: 12.0, bottom: 12.0, ),
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                Column(
-                                  children: <Widget>[
-                                    Text(
-                                      "หมายเหตุ ",
-                                      style: TextStyle(
-                                          fontSize: 18, color: Colors.black),
-                                    ),
-                                    // Padding(
-                                    //   padding: EdgeInsets.all(8.0),
-                                    //   child: Text(
-                                    //     '${date.day}/${date.month}/${date.year}',
-                                    //     textAlign: TextAlign.center,
-                                    //     style: TextStyle(fontSize: 15, color: Colors.black),
-                                    //   ),
-                                    // ),
-                                  ],
-                                ),
-                                Column(
-                                  children: <Widget>[
-                                    Text(
-                                      '${widget.Empleaves.comment}'== 'null' ? "": '${widget.Empleaves.comment}',
-                                      style: TextStyle(
-                                          fontSize: 18, color: Colors.black),
-                                    ),
-                                  ],
-                                ),
-                              ]),
-                        )),
-                    // Column(
-                    //   children: [
-                    //     Padding(
-                    //       padding: const EdgeInsets.all(20.0),
-                    //       child: TextFormField(
-                    //         decoration: InputDecoration(
-                    //           border: UnderlineInputBorder(),
-                    //           enabled: false,
-                    //           labelText: 'ประเภทลา',
-                    //           labelStyle: TextStyle(
-                    //               //color: iBlackColor,
-                    //               fontWeight: FontWeight.w700,
-                    //               fontSize: 25),
-                    //           enabledBorder: UnderlineInputBorder(
-                    //             //borderSide: BorderSide(color: iBlueColor),
-                    //           ),
-                    //           focusedBorder: UnderlineInputBorder(
-                    //             //borderSide: BorderSide(color: iBlueColor),
-                    //           ),
-                    //         ),
-                    //         initialValue: '${widget.Empleaves.leavetype}',
-                    //       ),
-                    //     ),
-                    //     Padding(
-                    //       padding: const EdgeInsets.all(20.0),
-                    //       child: TextFormField(
-                    //         decoration: InputDecoration(
-                    //           border: UnderlineInputBorder(),
-                    //           enabled: false,
-                    //           labelText: 'วันที่เริ่มต้นการลา',
-                    //           labelStyle: TextStyle(
-                    //              // color: iBlackColor,
-                    //               fontWeight: FontWeight.w700,
-                    //               fontSize: 25),
-                    //           enabledBorder: UnderlineInputBorder(
-                    //             //borderSide: BorderSide(color: iBlueColor),
-                    //           ),
-                    //           focusedBorder: UnderlineInputBorder(
-                    //             //borderSide: BorderSide(color: iBlueColor),
-                    //           ),
-                    //         ),
-                    //         initialValue: '${widget.Empleaves.startdate}',
-                    //       ),
-                    //     ),
-                    //     Padding(
-                    //       padding: const EdgeInsets.all(15.0),
-                    //       child: TextFormField(
-                    //         decoration: InputDecoration(
-                    //           border: UnderlineInputBorder(),
-                    //           enabled: false,
-                    //           labelText: 'วันที่สิ้นสุดการลา',
-                    //           labelStyle: TextStyle(
-                    //               //color: iBlackColor,
-                    //               fontWeight: FontWeight.w700,
-                    //               fontSize: 25),
-                    //           enabledBorder: UnderlineInputBorder(
-                    //             //borderSide: BorderSide(color: iBlueColor),
-                    //           ),
-                    //           focusedBorder: UnderlineInputBorder(
-                    //             //borderSide: BorderSide(color: iBlueColor),
-                    //           ),
-                    //         ),
-                    //         initialValue: '${widget.Empleaves.enddate}',
-                    //       ),
-                    //     ),
+                      padding: const EdgeInsets.all(15.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            // color: Colors.grey[300],
+                            borderRadius: BorderRadius.only(
+                                // topRight: Radius.circular(60.0),
+                                // topLeft: Radius.circular(60.0),
+                                // bottomLeft: Radius.circular(36),
+                                // bottomRight: Radius.circular(36))
+                                )),
+                        // color: Colors.cyan,
+                        // child: Padding(
+                        //   padding: const EdgeInsets.only(top: 12.0, bottom: 12.0, ),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              Column(
+                                children: <Widget>[
+                                  Text(
+                                    "สถานะคำร้อง ",
+                                    style: TextStyle(
+                                        fontSize: 18, color: Colors.black),
+                                  ),
+                                 
+                                ],
+                              ),
+                              Column(
+                                children: <Widget>[
+                                  Text(
+                                    '${widget.Empleaves.status}' ,
+                                    style: TextStyle(
+                                        fontSize: 18, color: Colors.black),
+                                  ),
+                                ],
+                              ),
+                            ]),
+                      )),
+                  SizedBox(height: 30),
 
-                    //     //Divider(),
-                    //     Padding(
-                    //       padding: const EdgeInsets.all(20.0),
-                    //       child: TextFormField(
-                    //         decoration: InputDecoration(
-                    //           border: UnderlineInputBorder(),
-                    //           enabled: false,
-                    //           labelText: 'หมายเหตุ',
-                    //           labelStyle: TextStyle(
-                    //               //color: iBlackColor,
-                    //              // fontWeight: FontWeight.w700,
-                    //               fontSize: 25),
-                    //           enabledBorder: UnderlineInputBorder(
-                    //            // borderSide: BorderSide(color: iBlueColor),
-                    //           ),
-                    //           focusedBorder: UnderlineInputBorder(
-                    //             //borderSide: BorderSide(color: iBlueColor),
-                    //           ),
-                    //         ),
-                    //         initialValue: '${widget.Empleaves.comment}',
-                    //       ),
-                    //     ),
-                    SizedBox(height: 30),
-                    // Container(
-                    //     // margin: EdgeInsets.only(top: 280),
-                    //     width: 350,
-                    //     height: 50,
-                    //     child: ElevatedButton(
-                    //       // BorderRadius: new BorderRadius.circular(30.0),
-
-                    //       //height: 60,
-                    //       // color: iBlueColor,
-                    //       onPressed: () {
-                    //         if (formKey.currentState!.validate()) {
-                    //           formKey.currentState!.save();
-                    //         }
-                    //         var services = EmpleaveServices();
-                    //         var controllers = EmpleaveController(services)
-                    //             .deleteEmpleave(
-                    //                 widget.Empleaves.empcode,
-                    //                 widget.Empleaves.startdate,
-                    //                 widget.Empleaves.enddate);
-
-                    //         Navigator.push(
-                    //             context,
-                    //             MaterialPageRoute(
-                    //                 builder: (context) => leave()));
-                    //       },
-                    //       style: ElevatedButton.styleFrom(
-                    //         //primary: iBlueColor,
-                    //         shape: new RoundedRectangleBorder(
-                    //           borderRadius: new BorderRadius.circular(30.0),
-                    //         ),
-                    //       ),
-                    //       child: Text(
-                    //         'อนุมัติ', style: TextStyle(fontSize: 18),
-                    //         //style: TextStyle(fontSize: 20, color: iWhiteColor)),
-                    //       ),
-                    //     )),
-                         SizedBox(height: 30),
-                    Container(
-                        // margin: EdgeInsets.only(top: 280),
-                        width: 300,
-                    height: 50,
-                        child: ElevatedButton(
+                  SizedBox(height: 30),
+                  Container(
+                      // margin: EdgeInsets.only(top: 280),
+                      width: 300,
+                      height: 50,
+                      child: ElevatedButton(
                           // BorderRadius: new BorderRadius.circular(30.0),
-child: Text(
-                            'ลบ', style: TextStyle(fontSize: 18)),
+                          child: Text('ลบ', style: TextStyle(fontSize: 18)),
                           //height: 60,
                           // color: iBlueColor,
-                          onPressed: () { showDialog(
+                          onPressed: () {
+                            showDialog(
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
                                     title: Text('ยืนยัน'),
-                                    content: Text(
-                                        'ยืนยันการลบการลา'),
+                                    content: Text('ยืนยันการลบการลา'),
                                     actions: [
                                       TextButton(
                                           onPressed: () {
@@ -646,29 +550,33 @@ child: Text(
                                           },
                                           child: Text('ไม่ใช่')),
                                       TextButton(
-                                        child: Text('ใช่'),  
+                                        child: Text('ใช่'),
                                         onPressed: () {
-                            if (formKey.currentState!.validate()) {
-                              formKey.currentState!.save();
-                            }
-                            var services = EmpleaveServices();
-                            var controllers = EmpleaveController(services)
-                                .deleteEmpleave(
-                                    widget.Empleaves.empcode,
-                                       widget.Empleaves.leavetype,
-                                    widget.Empleaves.startdate,
-                                    widget.Empleaves.enddate);
+                                          if (formKey.currentState!
+                                              .validate()) {
+                                            formKey.currentState!.save();
+                                          }
+                                          var services = EmpleaveServices();
+                                          var controllers = EmpleaveController(
+                                                  services)
+                                              .deleteEmpleave(
+                                                  widget.Empleaves.empcode,
+                                                  widget.Empleaves.leavetype,
+                                                  widget.Empleaves.startdate,
+                                                  widget.Empleaves.enddate);
 
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => profile()));
-                          },
-                          style: ElevatedButton.styleFrom(
-                            //primary: iBlueColor,
-                            shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(10.0),
-                          ),
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      profile()));
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          //primary: iBlueColor,
+                                          shape: new RoundedRectangleBorder(
+                                            borderRadius:
+                                                new BorderRadius.circular(10.0),
+                                          ),
                                         ),
                                       )
                                     ]);
@@ -678,5 +586,3 @@ child: Text(
                 ]))));
   }
 }
-                          
-                      

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:first_app/model/attendance.dart';
-import 'package:first_app/model/delegate.dart';
+import 'package:first_app/model/delegate_model.dart';
 import 'package:first_app/model/emp_leave.dart';
 import 'package:first_app/model/employee.dart';
 

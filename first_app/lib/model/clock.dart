@@ -6,11 +6,14 @@ class Clock {
   String currentlocation;
   DateTime createdate;
 
+
   Clock(
       this.empcode,
       this.clocktime,
       this.currentlocation,
-      this.createdate);
+      this.createdate,
+   
+      );
 
   factory Clock.fromDs(
     Map<String, Object?> json,
@@ -20,6 +23,7 @@ class Clock {
       json['clocktime'] as DateTime,
       json['currentlocation'] as String,
       json['createdate'] as DateTime,
+      
     );
   }
 
@@ -28,9 +32,10 @@ class Clock {
   ) {
     return Clock(
       json['empcode'] as int,
-      json['clocktime'] as DateTime,
+      json['clocktime']!.toDate() as DateTime,
       json['currentlocation'] as String,
-      json['createdate'] as DateTime,
+      json['createdate']!.toDate() as DateTime,
+     
     );
   }
 }
@@ -54,12 +59,14 @@ class ClockList {
   DateTime clocktime;
   String currentlocation;
   DateTime createdate;
+   
 
  ClockList(
      this.empcode,
       this.clocktime,
       this.currentlocation,
-      this.createdate);
+      this.createdate,
+     );
       
       factory ClockList.fromDs(
     Map<String, Object?> json,
@@ -69,6 +76,7 @@ class ClockList {
       json['clocktime'] as DateTime,
       json['currentlocation'] as String,
       json['createdate'] as DateTime,
+     
     );
   }
 
@@ -82,8 +90,22 @@ factory ClockList.fromJson(
       json['clocktime'] as DateTime,
       json['currentlocation'] as String,
       json['createdate'] as DateTime,
+       
     );
   }
 
+}
+class AllClockList {
+  final List<Clock> clocklist;
+  AllClockList(this.clocklist);
+
+  factory AllClockList.fromSnapshot(QuerySnapshot s) {
+
+    List<Clock> clocklists = s.docs.map((DocumentSnapshot ds) {
+      return Clock.fromJson(ds.data() as Map<String, dynamic>);
+    }).toList();
+
+    return AllClockList(clocklists);
+  }
 }
 

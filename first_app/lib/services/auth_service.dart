@@ -121,11 +121,9 @@ class AuthService extends AAuthService{
     QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('icovid_user').where('email', isEqualTo: email).get();
     SingleUser user = SingleUser.fromJson(snapshot);
     UserProfileProvider profile = UserProfileProvider();
-    profile.cid = user.user.cid;
+    profile.empcode = user.user.empcode;
     profile.email = user.user.email;
     profile.firstName = user.user.firstName;
-    profile.hospitalID = user.user.hospitalID;
-    profile.hospitalName = user.user.hospitalName;
     profile.lastName = user.user.lastName;
     profile.password = user.user.password;
     profile.position = user.user.position;

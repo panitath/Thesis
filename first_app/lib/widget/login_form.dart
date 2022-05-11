@@ -17,7 +17,7 @@ class _LogInFormState extends State<LogInForm> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        buildInputForm('อีเมล์', false, widget.email),
+        buildInputForm('ชื่อผู้ใช้', false, widget.email),
         buildInputForm('รหัสผ่าน', true, widget.password)
       ],
     );

@@ -45,11 +45,11 @@ class Delegate {
       json['leavetype'] as String,
       json['empcodemanager'] as int,
       json['managername'] as String,
-      json['startdate'] as DateTime,
-      json['enddate'] as DateTime,
+      json['startdate']!.toDate() as DateTime,
+      json['enddate']!.toDate() as DateTime,
       json['empcodedelegate'] as int,
       json['delegatename'] as String,
-      json['createdate'] as DateTime,
+      json['createdate']!.toDate() as DateTime,
     );
   }
 }
@@ -66,7 +66,17 @@ class AllDelegate {
   }
 }
 
+class SingleDelegate {
+  final Delegate delegate;
+  SingleDelegate(this.delegate);
 
+  factory SingleDelegate.fromJson(QuerySnapshot s) {
+    var delegate = s.docs.map((DocumentSnapshot ds) {
+      return Delegate.fromJson(ds.data() as Map<String, dynamic>);
+    });
+    return SingleDelegate(delegate.first);
+  }
+}
 
 class DelegateList {
    int empcode;
@@ -112,17 +122,30 @@ factory DelegateList.fromJson(
     Map<String, dynamic> json,
   ) {
     return DelegateList(
-json['empcode'] as int,
+      json['empcode'] as int,
       json['leavetype'] as String,
       json['empcodemanager'] as int,
       json['managername'] as String,
-      json['startdate'] as DateTime,
-      json['enddate'] as DateTime,
+      json['startdate']!.toDate() as DateTime,
+      json['enddate']!.toDate() as DateTime,
       json['empcodedelegate'] as int,
       json['delegatename'] as String,
-      json['createdate'] as DateTime,
+      json['createdate']!.toDate() as DateTime,
     );
   }
-
 }
+
+class AlldelegateList {
+  final List<Delegate> delegatelist;
+  AlldelegateList(this.delegatelist);
+
+  factory AlldelegateList.fromSnapshot(QuerySnapshot s) {
+  
+    List<Delegate> delegatelist = s.docs.map((DocumentSnapshot ds) {
+      return Delegate.fromJson(ds.data() as Map<String, dynamic>);
+    }).toList();
+    return AlldelegateList(delegatelist);
+  }
+}
+
 

@@ -1,13 +1,19 @@
 
-import 'package:first_app/model/even.dart';
-import 'package:first_app/model/event_form_model.dart';
+import 'package:first_app/controller/task_controller.dart';
+import 'package:first_app/model/event.dart';
+import 'package:first_app/model/task_provider.dart';
+import 'package:first_app/model/task.dart';
+import 'package:first_app/pages/calendar_page.dart';
+import 'package:first_app/services/task_services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'utils.dart';
 
 class EventEditingPage extends StatefulWidget {
-  final Event? event;
+ 
+  
+
+  final Task? event;
 
   const EventEditingPage({
     Key? key,
@@ -19,6 +25,12 @@ class EventEditingPage extends StatefulWidget {
 }
 
 class _EventEditingPageState extends State<EventEditingPage> {
+    var controller;
+  var service = TaskService();
+  _EventEditingPageState() {
+    controller = TaskController(service);
+  }
+
   final _formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
@@ -136,7 +148,7 @@ class _EventEditingPageState extends State<EventEditingPage> {
                 onClicked: () => pickFromDateTime(pickDate: true),
               ),
             ),
-            if (!isAllDay)
+            //if (!isAllDay)
               Expanded(
                 child: buildDropdownField(
                   text: Utils.toTime(fromDate),
@@ -253,28 +265,27 @@ class _EventEditingPageState extends State<EventEditingPage> {
 
   Future saveForm() async {
     final isValid = _formKey.currentState!.validate();
-
+context.read<TaskProvider>().empcode = empcode;
     if (isValid) {
-      final event = Event(
-        title: titleController.text,
-        description: descriptionController.text,
-        from: fromDate,
-        to: isAllDay ? fromDate : toDate,
-        isAllDay: isAllDay,
+     var services = TaskService();
+                            var controllers = TaskController(services)
+                                .updateTask(
+                                     empcode!,
+                                        titleController.text,
+          descriptionController.text,
+                                  fromDate,
+          toDate
+                                   );
+
+    
+
+      Navigator.pop(context);
+    }   Navigator.pushReplacement(
+  context,
+  MaterialPageRoute(
+    builder: (context) => Calendar(),
+  ),
+
       );
-
-      final isEditing = widget.event != null;
-      final provider = Provider.of<EventFormModel>(context, listen: false);
-
-      if (isEditing) {
-        provider.editEvent(event, widget.event!);
-
-        Navigator.of(context).pop();
-      } else {
-        provider.addEvent(event);
-      }
-
-      Navigator.of(context).pop();
-    }
   }
 }

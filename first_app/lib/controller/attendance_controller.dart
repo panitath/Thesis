@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:first_app/model/attendance.dart';
-import 'package:first_app/model/delegate.dart';
+import 'package:first_app/model/delegate_model.dart';
 import 'package:first_app/model/emp_leave.dart';
 import 'package:first_app/model/employee.dart';
 import 'package:first_app/services/attendance_service.dart';

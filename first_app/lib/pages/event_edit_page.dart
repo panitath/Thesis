@@ -1,14 +1,16 @@
-
-import 'package:first_app/model/even.dart';
-import 'package:first_app/model/event_form_model.dart';
+import 'package:first_app/controller/task_controller.dart';
+import 'package:first_app/model/event.dart';
+import 'package:first_app/model/task_provider.dart';
+import 'package:first_app/model/task.dart';
+import 'package:first_app/model/user_profile_provider.dart';
+import 'package:first_app/pages/calendar_page.dart';
+import 'package:first_app/services/task_services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'utils.dart';
 
 class EventEditPage extends StatefulWidget {
-  final Event? event;
-
+  final Task? event;
   const EventEditPage({
     Key? key,
     this.event,
@@ -19,6 +21,12 @@ class EventEditPage extends StatefulWidget {
 }
 
 class _EventEditPageState extends State<EventEditPage> {
+  var controller;
+  var service = TaskService();
+  _EventEditPageState() {
+    controller = TaskController(service);
+  }
+
   final _formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
@@ -33,7 +41,7 @@ class _EventEditPageState extends State<EventEditPage> {
     if (widget.event == null) {
       fromDate = DateTime.now();
       toDate = DateTime.now();
-        //toDate = DateTime.now().add(Duration(hours: 2));
+      //toDate = DateTime.now().add(Duration(hours: 2));
     } else {
       final event = widget.event!;
 
@@ -179,7 +187,8 @@ class _EventEditPageState extends State<EventEditPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(header, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+            Text(header,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
             child,
           ],
         ),
@@ -254,29 +263,76 @@ class _EventEditPageState extends State<EventEditPage> {
   }
 
   Future saveForm() async {
+    
+    int? empcode = context.read<UserProfileProvider>().empcode;
     final isValid = _formKey.currentState!.validate();
 
     if (isValid) {
-      final event = Event(
-        title: titleController.text,
-        description: descriptionController.text,
-        from: fromDate,
-        to: isAllDay ? fromDate : toDate,
-        isAllDay: isAllDay,
+      context.read<TaskProvider>().empcode = empcode;
+      context.read<TaskProvider>().title = titleController.text;
+      context.read<TaskProvider>().description = descriptionController.text;
+      context.read<TaskProvider>().from = fromDate;
+      context.read<TaskProvider>().to = toDate;
+
+      List<TaskList> Listtask = [];
+      if (context.read<TaskProvider>().taskList != null) {}
+      //add to State
+      Listtask.add(TaskList(
+          empcode!,
+          titleController.text,
+          descriptionController.text,
+          fromDate,
+          toDate,
+          // Color(0xFFFFFF),
+          true));
+
+      //add to firebase
+      controller.addTask(new Task(
+          empcode,
+          titleController.text,
+          descriptionController.text,
+          fromDate,
+          toDate,
+          // Color(0xFFFFFF),
+          false));
+
+      final event = Task(
+        empcode,
+        titleController.text,
+        descriptionController.text,
+        fromDate,
+        isAllDay ? fromDate : toDate,
+       
+        true,
       );
 
       final isEditing = widget.event != null;
-      final provider = Provider.of<EventFormModel>(context, listen: false);
+      final provider = Provider.of<TaskProvider>(context, listen: false);
 
       if (isEditing) {
         provider.editEvent(event, widget.event!);
 
-        Navigator.of(context).pop();
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Calendar(),
+          ),
+        );
+        //Navigator.pop(context);
       } else {
         provider.addEvent(event);
       }
-
-      Navigator.of(context).pop();
+       
+   //Navigator.push( context, MaterialPageRoute( builder: (context) => Calendar()), ).then((value) => setState(() {}));
+     // Navigator.of(context).pop();
+   Navigator.pushReplacement(
+  context,
+  MaterialPageRoute(
+    builder: (context) => Calendar(),
+  ),
+);
+   
+   
     }
   }
 }

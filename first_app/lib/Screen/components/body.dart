@@ -1,5 +1,6 @@
 import 'package:first_app/model/clock.dart';
-import 'package:first_app/pages/profile_page.dart';
+import 'package:first_app/model/user_profile_provider.dart';
+import 'package:first_app/pages/profilem_page.dart';
 import 'package:provider/provider.dart';
 import 'package:first_app/controller/clock_controller.dart';
 import 'package:first_app/model/clock_provider.dart';
@@ -27,7 +28,7 @@ class _BodyState extends State<Body> {
     controller = ClockController(services);
   }
 
-
+ late Position userLocation;
 
 
 //  @override
@@ -41,6 +42,8 @@ class _BodyState extends State<Body> {
 
   @override
   Widget build(BuildContext context) {
+    int? empcode = context.read<UserProfileProvider>().empcode;
+      
     return SafeArea(
       child: SizedBox(
         width: double.infinity,
@@ -66,15 +69,7 @@ class _BodyState extends State<Body> {
                 ),
                 child: Text("บันทึกเวลา", style: TextStyle(fontSize: 18)),
                 onPressed: () {
-                  
-            final snackBar = SnackBar(
-            content:  Text("บันทึกเวลาทำงาน ${DateTime.now().hour}.${DateTime.now().minute} น.", style: TextStyle(fontSize: 18)),
-            action: SnackBarAction(
-              label: 'Undo',
-              onPressed: () {
-                // Some code to undo the change.
-            
-                  context.read<ClockProvider>().empcode = 50872;
+                context.read<ClockProvider>().empcode = empcode;
                   context.read<ClockProvider>().clocktime = DateTime.now();
                   context.read<ClockProvider>().currentlocation =
                       _currentPosition.toString();
@@ -87,7 +82,7 @@ class _BodyState extends State<Body> {
                     //     .read<EmpleaveProvider>()
                     //   .empleaveList;
                   }
-                  getCurrentLocation() ;
+                  _getLocation() ;
                   //add to State
                   Listempleave.add(ClockList(50872, DateTime.now(),
                       _currentPosition.toString(), DateTime.now()));
@@ -96,16 +91,14 @@ class _BodyState extends State<Body> {
                  
                   print('ss' + _currentPosition.toString());
                    print('ss' + currentAddress.toString());
-
-
-                  // Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  //   return profile();
-
-                //  }
-                 // )
-                  //);
-
-                    }, //child: const Text('Show SnackBar'),
+            final snackBar = SnackBar(
+            content:  Text("บันทึกเวลาทำงาน ${DateTime.now().hour}.${DateTime.now().minute} น.", style: TextStyle(fontSize: 18)),
+            action: SnackBarAction(
+              label: 'Undo',
+              onPressed: () {
+                
+               
+                               }, //child: const Text('Show SnackBar'),
 ));
           ScaffoldMessenger.of(context).showSnackBar(snackBar);          
         },
@@ -140,20 +133,56 @@ class _BodyState extends State<Body> {
     );
   }
 
-   void  getCurrentLocation() {
-    Geolocator.getCurrentPosition(
-            desiredAccuracy: LocationAccuracy.best,
-            forceAndroidLocationManager: true)
-        .then((Position position) {
-      setState(() {
-        _currentPosition = position;
+  //  void  getCurrentLocation() {
+     
+  //   Geolocator.getCurrentPosition(
+  //           desiredAccuracy: LocationAccuracy.best,
+  //           forceAndroidLocationManager: true)
+  //       .then((Position position) {
+  //     setState(() {
+  //       _currentPosition = position;
+  //       _getAddressFromLatLng();
+  //       print(_currentPosition);
+  //     });
+  //   }).catchError((e) {
+  //     print('pp'+e);
+  //   });
+  
+  
+  
+  // }
+Future<Position> _getLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    userLocation = await Geolocator.getCurrentPosition();
+     setState(() {
+        _currentPosition = userLocation;
         _getAddressFromLatLng();
         print(_currentPosition);
       });
-    }).catchError((e) {
-      print('pp'+e);
-    });
+    return userLocation;
   }
+
+
 
   _getAddressFromLatLng() async {
     try {

@@ -1,29 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserProfile{
-  String cid;
+  int empcode;
   String email;
   String firstName;
-  int hospitalID;
-  String hospitalName;
   String lastName;
   String password;
   String position;
   int roleID;
   String roleName;
   String tel;
-  UserProfile(this.cid,this.email,this.firstName,this.hospitalID,this.hospitalName,this.lastName,this.password,this.position
+  UserProfile(this.empcode,this.email,this.firstName,this.lastName,this.password,this.position
   ,this.roleID,this.roleName,this.tel);
 
   factory UserProfile.fromJson(
     Map<String, dynamic> json,
   ) {
     return UserProfile(
-      json['cid'] as String,
+      json['cid'] as int,
       json['email'] as String,
       json['firstName'] as String,
-      json['hospitalID'] as int,
-      json['hospitalName'] as String,
+   
       json['lastName'] as String,
       json['password'] as String,
       json['position'] as String,

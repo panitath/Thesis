@@ -12,6 +12,7 @@ class EmpleaveProvider extends ChangeNotifier {
     int? empcodemanager;
   String? managername;
   DateTime? createdate;
+  String? manageremail;
 
 List<EmpleaveItem>? _empleaveList;
   get empleaveList => this._empleaveList;
@@ -75,6 +76,13 @@ get getempcode => this.empcode;
     this.managername = managername;
     notifyListeners();
   }
+
+  get getmanageremail => this.manageremail;
+
+  set setmanageremail(manageremail) {
+    this.manageremail = manageremail;
+    notifyListeners();
+  }
 }
 
 class EmpleaveItem {
@@ -87,6 +95,7 @@ class EmpleaveItem {
     final   int empcodemanager;
  final  String managername;
   final DateTime createdate;
+   final String manageremail;
 
   const EmpleaveItem({
     Key? key,
@@ -99,6 +108,7 @@ class EmpleaveItem {
      required this.empcodemanager,
     required this.managername,
     required this.createdate,
+     required this.manageremail
   });
 
   add(Map<String, String> map) {}

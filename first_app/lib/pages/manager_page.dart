@@ -4,7 +4,7 @@ import 'package:first_app/pages/approve_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'profile_page.dart';
+import 'profilem_page.dart';
 
 class ManagerPage extends StatelessWidget {
   @override

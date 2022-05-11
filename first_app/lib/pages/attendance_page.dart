@@ -1,22 +1,16 @@
-// import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:first_app/api/notification_api.dart';
 import 'package:first_app/controller/attendance_controller.dart';
-import 'package:first_app/controller/empleave_controller.dart';
-import 'package:first_app/model/Empleave_provider.dart';
 import 'package:first_app/model/attendance.dart';
 import 'package:first_app/model/attendance_provider.dart';
-import 'package:first_app/model/emp_leave.dart';
-import 'package:first_app/model/even.dart';
+import 'package:first_app/model/event.dart';
+import 'package:first_app/model/user_profile_provider.dart';
 import 'package:first_app/pages/approve_page.dart';
 import 'package:first_app/pages/attendancelist_page.dart';
-import 'package:first_app/pages/leavelist_page.dart';
 import 'package:first_app/services/attendance_service.dart';
-import 'package:first_app/services/empleave_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -93,6 +87,12 @@ class _attendanceState extends State<attendance> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+        int? empcode = context.read<UserProfileProvider>().empcode;
+        String?  firstname = context.read<UserProfileProvider>().firstName ;
+        String? lastname =context.read<UserProfileProvider>().lastName ;
+        String? email =context.read<UserProfileProvider>().email ;
+
+     
     return
         // Consumer<emp_leave>(
         //   builder: (context, emp_leave, child) =>
@@ -143,14 +143,13 @@ class _attendanceState extends State<attendance> {
                         
                           if (formKey.currentState!.validate()) {
                             formKey.currentState!.save();
-                            context.read<AttendanceProvider>().empcode =
-                                50872;
+                             context.read<AttendanceProvider>().empcode =empcode;
                             context.read<AttendanceProvider>().title =
                                 'นางสาว';
                             context.read<AttendanceProvider>().empfullname =
-                                'ปณิตา ธาราภูมิ';
+                               firstname! + lastname!;
                             context.read<AttendanceProvider>().empemail =
-                                'panita@ghb.co.th';
+                                email;
                                 context.read<AttendanceProvider>().empcodemanager = 19646;
                                 context.read<AttendanceProvider>().managername = 'Charunee';
                                 context.read<AttendanceProvider>().comment = descriptionController.text;

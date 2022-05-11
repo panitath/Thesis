@@ -2,15 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:first_app/controller/empleave_controller.dart';
 import 'package:first_app/model/Empleave_provider.dart';
 import 'package:first_app/model/emp_leave.dart';
-import 'package:first_app/pages/delegate_page.dart';
-import 'package:first_app/pages/home_page.dart';
-import 'package:first_app/pages/leave_page.dart';
 import 'package:first_app/services/empleave_services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'profile_page.dart';
+import 'profilem_page.dart';
 
 class Approve_All extends StatefulWidget {
   var service = EmpleaveServices();
@@ -79,7 +76,7 @@ class _Approve_AllState extends State<Approve_All> {
                     ),
                   ),
                 ),
-                title: Text('${_approvedList[index].leavetype}'),
+                title: Text('${_approvedList[index].leavetype} - ' '${_approvedList[index].firstname}''  ${_approvedList[index].lastname}' ),
                 subtitle: Text('วันที่ลา ${_approvedList[index].startdate.day}''/${_approvedList[index].startdate.month}''/${_approvedList[index].startdate.year}'),
                 onTap: () {
                   Navigator.push(

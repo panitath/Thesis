@@ -1,3 +1,5 @@
+import 'package:first_app/controller/authen_controller.dart';
+import 'package:first_app/controller/empleave_controller.dart';
 import 'package:first_app/pages/approve_page.dart';
 import 'package:first_app/pages/attendance_page.dart';
 import 'package:first_app/pages/calendar_page.dart';
@@ -5,10 +7,13 @@ import 'package:first_app/pages/clock_page.dart';
 import 'package:first_app/pages/delegate_page.dart';
 import 'package:first_app/pages/leave_page.dart';
 import 'package:first_app/pages/leavelist_page.dart';
+import 'package:first_app/pages/login.dart';
 import 'package:first_app/pages/manager_page.dart';
 import 'package:first_app/widget/BottomNavigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+import 'report_page.dart';
 
 class profile extends StatefulWidget {
   const profile({Key? key}) : super(key: key);
@@ -16,7 +21,8 @@ class profile extends StatefulWidget {
   @override
   _profileState createState() => _profileState();
 }
-
+ late final EAuthenController authenController;
+  late final EmpleaveController empleaveController;
 class _profileState extends State<profile> {
   @override
   Widget build(BuildContext context) {
@@ -76,16 +82,24 @@ class _profileState extends State<profile> {
                           fontSize: 25.0)),
                           
                  IconButton(
-                    icon: Icon(Icons.notifications_active),
+                    icon: Icon(Icons.logout_sharp),
                     color: Colors.white,
-                    onPressed: () {},
+                      onPressed: () {
+
+
+                        Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            return LogInScreen(authenController,empleaveController);
+                                          }));
+                    },
                   ),
-                  // SizedBox(width: 10.0),
-                  // Text('',
-                  //     style: TextStyle(
-                  //         fontFamily: 'Montserrat',
-                  //         color: Colors.white,
-                  //         fontSize: 25.0))
+                  SizedBox(width: 10.0),
+                  Text('',
+                      style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          color: Colors.white,
+                          fontSize: 25.0))
                 ],
               ),
             ),
@@ -158,30 +172,19 @@ class _profileState extends State<profile> {
               },
             ),
           ),
-          Container(
-            color: Color(0xFFFFFFFF),
-            child: profilemenu(
-            icon: "assets/images/attendance1.svg",
-              text: "รับรองเวลาปฏิบัติงาน",
-              press: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return attendance();
-                }));
-              },
-            ),
-          ),
-          Container(
-            color: Color(0xFFFFFFFF),
-            child: profilemenu(
-              icon: "assets/images/manager1.svg",
-              text: "ผู้บังคับบัญชา",
-              press: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return ManagerPage();
-                }));
-              },
-            ),
-          ),  
+          // Container(
+          //   color: Color(0xFFFFFFFF),
+          //   child: profilemenu(
+          //   icon: "assets/images/attendance1.svg",
+          //     text: "รับรองเวลาปฏิบัติงาน",
+          //     press: () {
+          //       Navigator.push(context, MaterialPageRoute(builder: (context) {
+          //         return attendance();
+          //       }));
+          //     },
+          //   ),
+          // ),
+        
 
             Container(
             color: Color(0xFFFFFFFF),
@@ -194,8 +197,33 @@ class _profileState extends State<profile> {
                 }));
               },
             ),
-          ),  
+          ), 
             
+            Container(
+            color: Color(0xFFFFFFFF),
+            child: profilemenu(
+              icon: "assets/images/manager1.svg",
+              text: "ผู้บังคับบัญชา",
+              press: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return ManagerPage();
+                }));
+              },
+            ),
+          ),  
+           Container(
+            color: Color(0xFFFFFFFF),
+            child: profilemenu(
+              icon: "assets/images/Report.svg",
+              text: "รายงาน",
+              press: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return report();
+                }
+                ));
+              },
+            ),
+          ),   
         ])
         //bottomNavigationBar: BottomNavigation(),
         );

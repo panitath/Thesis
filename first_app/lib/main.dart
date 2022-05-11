@@ -1,20 +1,19 @@
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:first_app/constants/font_sonstant.dart';
-
 import 'package:first_app/controller/empleave_controller.dart';
+import 'package:first_app/model/task_provider.dart';
 import 'package:first_app/model/attendance_provider.dart';
 import 'package:first_app/model/clock_provider.dart';
 import 'package:first_app/model/deligate_provider.dart';
 import 'package:first_app/model/employee_provider.dart';
 import 'package:first_app/model/event_form_model.dart';
 import 'package:first_app/model/my_theme_provider.dart';
-import 'package:first_app/model/profile.dart';
 import 'package:first_app/model/user_profile_provider.dart';
-import 'package:first_app/model/user_provider.dart';
+import 'package:first_app/services/empleave_services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import 'controller/authen_controller.dart';
 import 'model/Empleave_provider.dart';
 import 'pages/delegate_page.dart';
 import 'pages/calendar_page.dart';
@@ -23,8 +22,8 @@ import 'pages/leave_page.dart';
 import 'pages/leavelist_page.dart';
 import 'pages/login.dart';
 import 'pages/profile_page.dart';
-import 'pages/time.dart';
-import 'services/empleave_services.dart';
+import 'pages/profilem_page.dart';
+import 'services/api_service.dart';
 
 // void main() {
 //   runApp(MyApp());
@@ -36,6 +35,8 @@ import 'services/empleave_services.dart';
 // }
 
 void main() async {
+   
+
 //   WidgetsFlutterBinding.ensureInitialized();
 //   await Firebase.initializeApp();
 //   runApp(App());
@@ -54,6 +55,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => UserProfileProvider()),
        ChangeNotifierProvider(create: (context) => AttendanceProvider()),
         ChangeNotifierProvider(create: (context) => UserProfileProvider()),
+        ChangeNotifierProvider(create: (context) => TaskProvider()),
       ],
     
     
@@ -66,7 +68,7 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   final Future<FirebaseApp> firebase = Firebase.initializeApp();
-
+ 
   @override
   Widget build(BuildContext context) {
     return 
@@ -96,14 +98,19 @@ class MyApp extends StatelessWidget {
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
+  
 
   @override
   _MainPageState createState() => _MainPageState();
 }
+ 
+
 @override
 class _MainPageState extends State<MainPage> {
   int index = 0;
-  final screens = [LogInScreen(),profile(),delegate(), leave(), clock(), Calendar()];
+  final screens = [profile(),delegate(), leave(), clock(), Calendar()];//[LogInScreen()
+ 
+
   
   Widget build(BuildContext context) {
     return Scaffold(
@@ -113,6 +120,12 @@ body: buildPages(),
 }
 
 Widget buildPages(){
+    var eAuthenServices = EAuthenServices();
+ var employeeController = EAuthenController(eAuthenServices);
+
+   var eEmpServices = EmpleaveServices();
+ var leaveController = EmpleaveController(eEmpServices);
+  
 switch (index){
    case 1:
    return leave();
@@ -123,7 +136,7 @@ switch (index){
    case 4:
   return Calendar();
   case 0:
-  default: return LogInScreen();
+  default: return  LogInScreen(employeeController,leaveController);
 }
 
 }

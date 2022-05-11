@@ -7,7 +7,7 @@
  
   
    <application
-        android:label="Panita_app"
+        android:label="GHB Time Management"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

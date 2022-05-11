@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:first_app/constants/color_constant.dart';
+import 'package:first_app/controller/authen_controller.dart';
 import 'package:first_app/controller/empleave_controller.dart';
 import 'package:first_app/model/Empleave_provider.dart';
 import 'package:first_app/model/emp_leave.dart';
-import 'package:first_app/pages/delegate_page.dart';
-import 'package:first_app/pages/home_page.dart';
-import 'package:first_app/pages/leave_page.dart';
+import 'package:first_app/model/leave_postapi_model.dart';
+import 'package:first_app/services/api_service.dart';
 import 'package:first_app/services/empleave_services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,14 +13,16 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import 'profile_page.dart';
+import 'profilem_page.dart';
 
 class Approve extends StatefulWidget {
   var service = EmpleaveServices();
-
+  var authservice = EAuthenServices();
   var controller;
   var authController;
   Approve() {
     controller = EmpleaveController(service);
+    authController = EAuthenController(authservice);
   }
 
   @override
@@ -37,6 +39,7 @@ class _ApproveState extends State<Approve> {
   final auth = FirebaseAuth.instance;
   int? empcodemanager = 19646;
   String? status = 'SENT';
+  LeavePostAPIModel? model;
 
   @override
   void initState() {
@@ -44,10 +47,10 @@ class _ApproveState extends State<Approve> {
     setState(() {});
     widget.controller.onSync
         .listen((bool syncState) => setState(() => isLoading = syncState));
-    _gettApprovedList();
+    _getApprovedList();
   }
 
-  void _gettApprovedList() async {
+  void _getApprovedList() async {
     var approvedList =
         await widget.controller.fectApprovedList(empcodemanager, status);
     setState(() {
@@ -56,6 +59,8 @@ class _ApproveState extends State<Approve> {
       // empleaveList = empleaveList;
     });
   }
+
+
 
   Widget get body => isLoading
       ? CircularProgressIndicator()
@@ -474,10 +479,7 @@ class _EmpleaveDetailState extends State<EmpleaveDetail> {
                        width: 300,
                     height: 50,
                       child: ElevatedButton(
-                          // BorderRadius: new BorderRadius.circular(30.0),
 
-                          //height: 60,
-                          
                           child: Text(
                             'อนุมัติ',
                             style: TextStyle(fontSize: 18),
@@ -518,6 +520,22 @@ class _EmpleaveDetailState extends State<EmpleaveDetail> {
                                                             .Empleaves.enddate,
                                                         'approved');
 
+                                                         var authservice = EAuthenServices();
+
+                                                         var authcontroller =
+                                                EAuthenController(authservice)
+                                                    .postleave(
+                                                        widget
+                                                            .Empleaves.empcode,widget.Empleaves.firstname ,widget.Empleaves.lastname,
+                                                       widget.Empleaves.leaveid,
+                                                       // widget.Empleaves.leavetype,
+                                                        widget.Empleaves
+                                                            .startdate,
+                                                        widget
+                                                            .Empleaves.enddate,
+                                                        );
+
+        
                                             Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
@@ -608,266 +626,3 @@ class _EmpleaveDetailState extends State<EmpleaveDetail> {
   }
 }
            
-//            Column(
-//             children: [
-//               Container(
-//                   // color: Colors.cyan,
-//                   child: Padding(
-//                 padding: const EdgeInsets.only(top: 12.0, bottom: 12.0),
-//                 child: Row(
-//                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                     children: <Widget>[
-//                       // Column(
-//                       //   children: <Widget>[
-//                       //     Padding(
-//                       //       padding: const EdgeInsets.all(8.0),
-//                       //       child: Image.asset("assets/images/leaverequest.png"),
-//                       //     ),
-//                       //   ],
-//                       // ),
-//                     ]),
-//               )),
-//               Container(
-//                   // color: Colors.cyan,
-//                   // decoration: BoxDecoration(
-//                   //     color: Colors.green[400],
-//                   //     borderRadius: BorderRadius.circular(20)),
-//                   child: Padding(
-//                 padding: const EdgeInsets.only(top: 12.0, bottom: 12.0),
-//                 child: Row(
-//                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                     children: <Widget>[
-//                       Column(
-//                         children: <Widget>[
-//                           // Text(
-//                           //   "แจ้งมอบหมายปฏิบัติหน้าที่แทน",
-//                           //   style: TextStyle(fontSize: 20),
-//                           // ),
-//                         ],
-//                       ),
-//                     ]),
-//               )),
-//               Container(
-//                   child: Padding(
-//                 padding: const EdgeInsets.only(top: 12.0, bottom: 12.0),
-//                 child: Row(
-//                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                     children: <Widget>[
-//                       Column(
-//                         children: <Widget>[
-//                           Text(
-//                             "ชื่อพนักงาน",
-//                             style: TextStyle(fontSize: 20),
-//                           ),
-//                         ],
-//                       ),
-//                       Column(
-//                         children: <Widget>[
-//                           Row(children: <Widget>[
-//                              Text(
-//                             "น.ส.ปณิตา  ธาราภูมิ",
-//                             style: TextStyle(fontSize: 20),
-//                           ),
-//                           ])
-//                         ],
-//                       ),
-//                     ]),
-//               )),
-//               Container(
-//                 // decoration: BoxDecoration(
-//                 //     color: Colors.yellow[600],
-//                 //     borderRadius: BorderRadius.circular(20)),
-//                 child: Padding(
-//                   padding: const EdgeInsets.only(top: 12.0, bottom: 12.0),
-//                   child: Row(
-//                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                       children: <Widget>[
-//                         Column(
-//                           children: <Widget>[
-//                             Text("ประเภทลา", style: TextStyle(fontSize: 20)),
-//                           ],
-//                         ),
-//                         Column(
-//                           children: <Widget>[
-//                              Text('${form.leavetype}',),
-//                           ],
-//                         ),
-//                       ]),
-//                 ),
-//               ),
-//               Container(
-//                   // color: Colors.cyan,
-//                   child: Padding(
-//                 padding: const EdgeInsets.only(top: 12.0, bottom: 12.0),
-//                 child: Row(
-//                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                     children: <Widget>[
-//                       Column(
-//                         children: <Widget>[
-//                           Text(
-//                             "วันที่เริ่มต้น",
-//                             style: TextStyle(fontSize: 20),
-//                           ),
-//                         ],
-//                       ),
-//                       Column(
-                        
-//                         children: <Widget>[
-//                           Row(children: <Widget>[
-                            
-//                             Text('${form.startdate}',),
-//                             // IconButton(
-//                             //   icon: Icon(Icons.calendar_today),
-//                             //   onPressed: () {
-//                             //     _openDatepicker(context);
-//                             //   },
-//                             // ),
-//                           ])
-//                         ],
-//                       ),
-//                     ]),
-//               )),
-//               Container(
-//                   // color: Colors.cyan,
-//                   child: Padding(
-//                 padding: const EdgeInsets.only(top: 12.0, bottom: 12.0),
-//                 child: Row(
-//                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                     children: <Widget>[
-//                       Column(
-//                         children: <Widget>[
-//                           Text(
-//                             "วันที่สิ้นสุด",
-//                             style: TextStyle(fontSize: 20),
-//                           ),
-//                         ],
-//                       ),
-//                       Column(
-//                         children: <Widget>[
-//                           Row(children: <Widget>[
-                            
-//                             Text('${form.enddate}'),
-//                             // IconButton(
-//                             //   icon: Icon(Icons.calendar_today),
-//                             //   onPressed: () {
-//                             //     _openDatepicker(context);
-//                             //   },
-//                             // ),
-//                           ])
-//                         ],
-//                       ),
-//                     ]),
-//               )),
-//               Container(
-//                   child: Padding(
-//                 padding: const EdgeInsets.only(top: 12.0, bottom: 12.0),
-//                 child: Row(
-//                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                     children: <Widget>[
-//                       Column(
-//                         children: <Widget>[
-//                           Text(
-//                             "หมายเหตุ",
-//                             style: TextStyle(fontSize: 20),
-//                           ),
-//                         ],
-//                       ),
-//                       Column(
-//                         children: <Widget>[
-//                           Row(children: <Widget>[
-//                             SizedBox(
-//                               height: 50,
-//                               width: 250,
-//                               child: Text('${form.comment}'== ''  ? '-' : '${form.comment}'.toString()),
-                              
-
-                              
-//                             )
-//                           ])
-//                         ],
-//                       ),
-//                     ]),
-//               )),
-//               Container(
-//                   child: Padding(
-//                 padding: const EdgeInsets.only(top: 12.0, bottom: 12.0),
-//                 child: Row(
-//                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                     children: <Widget>[
-//                       Column(
-//                         children: <Widget>[
-//                           Text(
-//                             "หมายเหตุใหม่",
-//                             style: TextStyle(fontSize: 20),
-//                           ),
-//                         ],
-//                       ),
-//                       Column(
-//                         children: <Widget>[
-//                           Row(children: <Widget>[
-//                             SizedBox(
-//                              height: 50,
-//                                   width: 250,
-//                                   child: TextFormField(
-//                                     decoration: InputDecoration(
-//                                       enabledBorder: OutlineInputBorder(
-//                                       borderSide: BorderSide(color: Colors.grey),
-//                                       borderRadius: BorderRadius.all(Radius.circular(30))),
-//                                       filled: false,fillColor: Colors.grey
-//                                     )))
-//                           ])
-//                         ],
-//                       ),
-//                     ]),
-//               )),
-//               SizedBox(
-//                 width: 350,
-//                 height: 50,
-//                 child: ElevatedButton(
-//                     style: ElevatedButton.styleFrom(
-//                       shape: new RoundedRectangleBorder(
-//                         borderRadius: new BorderRadius.circular(30.0),
-//                       ),
-//                     ),
-//                   child: Text("อนุมัติ"),
-//                   onPressed: () {
-
-                   
-//                     Navigator.push(context,
-//                         MaterialPageRoute(builder: (context) {
-//                       return delegate();
-//                     }));
-//                   },
-//                 ),
-//               ),
-//                SizedBox(
-//                 width: 150,
-//                  height: 10),
-//               SizedBox(
-//                width: 350,
-//                 height: 50,
-//                 child: ElevatedButton(
-//                     style: ElevatedButton.styleFrom(
-//                       shape: new RoundedRectangleBorder(
-//                         borderRadius: new BorderRadius.circular(30.0),
-//                       ),
-//                     ),
-//                   child: Text("ปฏิเสธ"),
-//                   onPressed: () {
-//                     Navigator.push(context,
-//                         MaterialPageRoute(builder: (context) {
-//                       return delegate();
-//                     }));
-//                   },
-//                 ),
-//               ),
-//             ],
-//           );
-          
-//           }
-//     ),
-//   )
-//   );
-        
-//   }
-// }
